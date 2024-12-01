@@ -18,23 +18,28 @@ class Logger {
 public:
 
     static void Init() {
+#ifdef SQ_ENABLE_TRACE_LOGGING
         // Use rotating file sink for debug logs
         core_logger_ = spdlog::rotating_logger_mt("core_logger", "logs/output.log", 1048576 * 5, 3);
         core_logger_->set_level(spdlog::level::trace);
         core_logger_->flush_on(spdlog::level::info);
         core_logger_->set_pattern("[%Y-%m-%d %X.%e] [%P] [%l] %!() in %s:%# %v");
-
+#endif
         // Use color coding for console output
         console_logger_ = spdlog::stdout_color_mt("CONSOLE");
         console_logger_->set_pattern("%^[%Y-%m-%d %X.%e] [%l] %v%$");
 
     }
 
+#ifdef SQ_ENABLE_TRACE_LOGGING
     inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() {return core_logger_;}
+#endif
     inline static std::shared_ptr<spdlog::logger>& GetConsoleLogger() {return console_logger_;}
 
 private:
+#ifdef SQ_ENABLE_TRACE_LOGGING
     inline static std::shared_ptr<spdlog::logger> core_logger_;
+#endif
     inline static std::shared_ptr<spdlog::logger> console_logger_;
 };
 } // namespace Log
@@ -42,14 +47,20 @@ private:
 // SPDLOG SPECIFIC MACRSO/FLAGS
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
-// Console Output Marcos :: For Printing to console  
-#define CONSOLE_INFO(...) ::Log::Logger::GetConsoleLogger()->info(__VA_ARGS__); ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::info, __VA_ARGS__)
-#define CONSOLE_WARN(...) ::Log::Logger::GetConsoleLogger()->warn(__VA_ARGS__); ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::warn, __VA_ARGS__)
-#define CONSOLE_ERROR(...) ::Log::Logger::GetConsoleLogger()->error(__VA_ARGS__); ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::err, __VA_ARGS__)
+// Logging Macros :: For showing output to console 
+#ifdef SQ_ENABLE_TRACE_LOGGING
+    #define CONSOLE_INFO(...) ::Log::Logger::GetConsoleLogger()->info(__VA_ARGS__); ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::info, __VA_ARGS__)
+    #define CONSOLE_WARN(...) ::Log::Logger::GetConsoleLogger()->warn(__VA_ARGS__); ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::warn, __VA_ARGS__)
+    #define CONSOLE_ERROR(...) ::Log::Logger::GetConsoleLogger()->error(__VA_ARGS__); ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::err, __VA_ARGS__)
 
-// Log message Marcos  :: For debugging purposes
-#define LOG_TRACE(...) ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::trace, __VA_ARGS__)
-#define LOG_DEBUG(...) ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::debug, __VA_ARGS__)
-#define LOG_INFO(...) ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::info, __VA_ARGS__)
-#define LOG_WARN(...) ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::warn, __VA_ARGS__)
-#define LOG_ERROR(...) ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::err, __VA_ARGS__)
+    // Log message Marcos  :: For debugging purposes
+    #define LOG_TRACE(...) ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::trace, __VA_ARGS__)
+    #define LOG_DEBUG(...) ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::debug, __VA_ARGS__)
+    #define LOG_INFO(...) ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::info, __VA_ARGS__)
+    #define LOG_WARN(...) ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::warn, __VA_ARGS__)
+    #define LOG_ERROR(...) ::Log::Logger::GetCoreLogger()->log(spdlog::source_loc{__FILE__, __LINE__, SPDLOG_FUNCTION}, spdlog::level::err, __VA_ARGS__)
+#else
+    #define CONSOLE_INFO(...) ::Log::Logger::GetConsoleLogger()->info(__VA_ARGS__)
+    #define CONSOLE_WARN(...) ::Log::Logger::GetConsoleLogger()->warn(__VA_ARGS__)
+    #define CONSOLE_ERROR(...) ::Log::Logger::GetConsoleLogger()->error(__VA_ARGS__)
+#endif
