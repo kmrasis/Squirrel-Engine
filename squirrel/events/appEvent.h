@@ -1,0 +1,14 @@
+#pragma once
+
+#include "event.h"
+
+namespace Squirrel
+{
+    class ApplicationEvent : public Event
+    {
+    public:
+        ApplicationEvent(const EventType &event_type)
+        : Event(event_type) {}
+        ~ApplicationEvent() = default;
+    };
+} // namespace Squirrel

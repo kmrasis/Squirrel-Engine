@@ -1,7 +1,9 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
-#include <spdlog/sinks/rotating_file_sink.h>
 
+#ifdef SQ_ENABLE_TRACE_LOGGING
+    #include <spdlog/sinks/rotating_file_sink.h>
+#endif
 /*
     Using dual logger object approach:
         1. For printing colored output to console

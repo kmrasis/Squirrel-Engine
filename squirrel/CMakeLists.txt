@@ -6,6 +6,7 @@ add_subdirectory(logger)
 
 target_include_directories(squirrel PUBLIC
     ${CMAKE_SOURCE_DIR}/squirrel/logger
+    ${CMAKE_SOURCE_DIR}/squirrel/events
 )
 
 target_link_libraries(squirrel PUBLIC
