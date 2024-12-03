@@ -1,9 +1,0 @@
-#pragma once
-
-extern Squirrel::Application* Squirrel::CreateApplication();
-
-int main(int argc, char** argv) {
-    Squirrel::Application* app = Squirrel::CreateApplication();
-    app->run();
-    delete app;
-}

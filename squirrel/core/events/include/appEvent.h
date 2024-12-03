@@ -7,8 +7,7 @@ namespace Squirrel
     class ApplicationEvent : public Event
     {
     public:
-        ApplicationEvent(const EventType &event_type)
-        : Event(event_type) {}
-        ~ApplicationEvent() = default;
+        ApplicationEvent(const EventType &event_type);
+        ~ApplicationEvent();
     };
 } // namespace Squirrel

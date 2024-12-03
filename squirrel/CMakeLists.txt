@@ -1,14 +1,18 @@
 add_library(squirrel SHARED
-    core/application.cpp
+    main.cpp
 )
 
-add_subdirectory(logger)
+set_target_properties(squirrel PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_LIST_DIR}/core/application/include"
+)
 
 target_include_directories(squirrel PUBLIC
-    ${CMAKE_SOURCE_DIR}/squirrel/logger
-    ${CMAKE_SOURCE_DIR}/squirrel/events
+    ${CMAKE_CURRENT_LIST_DIR}/core/application/include
 )
 
 target_link_libraries(squirrel PUBLIC
-    logger
+    squirrel_application
 )
+
+add_subdirectory(core)
+add_subdirectory(utils)
