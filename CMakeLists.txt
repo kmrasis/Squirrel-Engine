@@ -7,7 +7,25 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release
         CACHE STRING "Choose the build type (Debug, Release, RelWithDebInfo)" FORCE)
 endif()
-message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
+# Validate build type
+set(VALID_BUILD_TYPES Debug Release RelWithDebInfo MinSizeRel)
+if(NOT CMAKE_BUILD_TYPE IN_LIST VALID_BUILD_TYPES)
+message(FATAL_ERROR "Invalid build type : ${CMAKE_BUILD_TYPE}. Valid options are : ${VALID_BUILD_TYPES}")
+endif()
+message(STATUS "Configuring for build type: ${CMAKE_BUILD_TYPE}")
+
+# Build type specific flags
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-g -O2")
+set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -DNDEBUG")
+
+# Custom flag for trace logging
+option(SQ_ENABLE_TRACE_LOGGING "Enable trace logging" OFF)
+if(SQ_ENABLE_TRACE_LOGGING)
+    add_definitions(-DSQ_ENABLE_TRACE_LOGGING)
+endif()
 
 # Platform and System Info
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")

@@ -23,7 +23,7 @@ done
 
 
 # Generate MakeFiles
-cmake -S${SOURCE_DIR} -B${BUILD_DIR}
+cmake -S${SOURCE_DIR} -B${BUILD_DIR} ${@}
 
 # compile
 pushd ${BUILD_DIR}
