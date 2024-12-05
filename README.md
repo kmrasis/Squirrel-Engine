@@ -6,8 +6,19 @@
 
 #### Pre Requisites / Dependencies
 - cmake
+- libwayland-dev
+- libx11-dev
+- libxandr-dev
+- libxinerama-dev
+- libxcursor-dev
+- libxi-dev
+- libxext-dev
+- libxkbcommon-dev
+- libgl1-mesa-dev
+- mesa-common-dev
 
 #### 3rd party libraries
+    glfw      : Pre-compiled Version 3.4
     spdlog    : Pre-compiled Version 1.15.0
 
 
