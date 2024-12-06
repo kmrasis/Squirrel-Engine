@@ -4,10 +4,10 @@
 
 namespace Squirrel
 {
-    class ApplicationEvent : public Event
-    {
-    public:
-        ApplicationEvent(const EventType &event_type);
-        ~ApplicationEvent();
-    };
+class ApplicationEvent : public Event
+{
+public:
+  ApplicationEvent(const EventType& event_type);
+  ~ApplicationEvent();
+};
 } // namespace Squirrel

@@ -1,27 +1,27 @@
 class GLFWwindow;
 namespace Squirrel
 {
-    class WindowProperty;
-    class WindowManager
-    {
-    public:
-        WindowManager();
-        ~WindowManager();
+class WindowProperty;
+class WindowManager
+{
+public:
+  WindowManager();
+  ~WindowManager();
 
-        void Init();
+  void Init();
 
-        void DeInit();
+  void DeInit();
 
-        bool CreateWindow(WindowProperty &props);
+  bool CreateWindow(WindowProperty& props);
 
-        void CloseWindow();
+  void CloseWindow();
 
-        void SetVSync(const bool &enabled);
+  void SetVSync(const bool& enabled);
 
-        void OnUpdate();
+  void OnUpdate();
 
-    private:
-        bool is_initialised_ = false;
-        GLFWwindow *window_;
-    };
+private:
+  bool is_initialised_ = false;
+  GLFWwindow* window_;
+};
 } // namespace Squirrel

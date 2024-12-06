@@ -5,6 +5,6 @@
 class Ardilla : public Squirrel::Application
 {
 public:
-    Ardilla();
-    ~Ardilla();
+  Ardilla();
+  ~Ardilla();
 };
