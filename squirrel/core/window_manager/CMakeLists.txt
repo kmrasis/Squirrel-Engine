@@ -9,18 +9,21 @@ set_target_properties(glfw PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${GLFW_INCLUDE_DIR}"
 )
 
-# Configuration for window_manager archive
-add_library(window_manager
+# Configuration for squirrel_window_manager archive
+add_library(squirrel_window_manager
     src/window_manager.cpp
 )
-set_target_properties(window_manager PROPERTIES 
+set_target_properties(squirrel_window_manager PROPERTIES 
     LINKER_LANGUAGE CXX
     INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_LIST_DIR}/include"
 )
-target_include_directories(window_manager PUBLIC
+target_include_directories(squirrel_window_manager PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/include
 )
-target_link_libraries(window_manager PUBLIC
+target_link_libraries(squirrel_window_manager
+    PUBLIC
     glfw
+    PRIVATE
+    squirrel_events
     utils_logger
 )

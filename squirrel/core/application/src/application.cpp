@@ -1,13 +1,7 @@
 #include "application.h"
 #include "log-impl.h"
 
-#include "appEvent.h"
-#include "keyEvent.h"
-#include "mouseEvent.h"
-#include "windowEvent.h"
-
-#include "window_manager.h"
-#include "window_property.h"
+#include "event_manager.h"
 
 #include <unistd.h> // For timed loop, remove when not needed
 
@@ -21,9 +15,9 @@ void Application::Init()
 {
   ::Utils::Logger::Init();
 
-  window_manager_ = std::make_unique<WindowManager>();
-  window_manager_->Init();
-
+  event_manager_ = std::make_unique<EventManager>();
+  event_manager_->Init();
+  is_running = true;
   CONSOLE_INFO("Initialised Squirrel Engine successfully");
 }
 
@@ -31,24 +25,17 @@ void Application::DeInit()
 {
   CONSOLE_INFO("DeInitialising Squirrel Engine");
 
-  window_manager_->DeInit();
-
+  event_manager_->DeInit();
   ::Utils::Logger::DeInit();
+  is_running = false;
 }
 
 void Application::Run()
 {
   CONSOLE_INFO("Booting up the Squirrel Engine!");
-
-  MouseEvent mouseEvent(EventType::MouseMove, 10, 20, 0, 0, 1, 1);
-  CONSOLE_INFO(mouseEvent.Log());
-
-  WindowProperty props;
-  window_manager_->CreateWindow(props);
-  sleep(15);
-  window_manager_->CloseWindow();
-
-  while (is_running)
-  {}
+  while (is_running && event_manager_->IsRunning())
+  {
+    event_manager_->DispatchEvents();
+  }
 }
 } // namespace Squirrel

@@ -5,26 +5,31 @@
 namespace Squirrel
 {
 
-KeyboardEvent::KeyboardEvent(const EventType& event_type, const int& key_code, const int& repeat_count)
+KeyboardEvent::KeyboardEvent(const EventType& event_type, const int& key, const int& scan_code, const int& mods)
     : Event(event_type),
-      key_code_(key_code),
-      repeat_count_(repeat_count)
+      key_(key),
+      scan_code_(scan_code),
+      mods_(mods)
 {}
 KeyboardEvent::~KeyboardEvent() = default;
 
-int KeyboardEvent::GetKeyCode() { return key_code_; }
-void KeyboardEvent::SetKeyCode(const int& key_code) { key_code_ = key_code; }
+int KeyboardEvent::GetKey() { return key_; }
+void KeyboardEvent::SetKey(const int& key) { key_ = key; }
 
-int KeyboardEvent::GetRepeatCount() { return repeat_count_; }
-void KeyboardEvent::SetRepeatCount(const int& repeat_count) { repeat_count_ = repeat_count; }
+int KeyboardEvent::GetScanCode() { return scan_code_; }
+void KeyboardEvent::SetScanCode(const int& scan_code) { scan_code_ = scan_code; }
+
+int KeyboardEvent::GetMods() { return mods_; }
+void KeyboardEvent::SetMods(const int& mods) { mods_ = mods; }
 
 std::string KeyboardEvent::Log() const
 {
   std::stringstream ss;
   ss << "EventType : " << GetEventName();
   ss << ", isHandled : " << is_handled_;
-  ss << ", keyCode : " << key_code_;
-  ss << ", repeat : " << repeat_count_;
+  ss << ", key : " << key_;
+  ss << ", scan code : " << scan_code_;
+  ss << ", mods : " << mods_;
   return ss.str();
 }
 } // namespace Squirrel

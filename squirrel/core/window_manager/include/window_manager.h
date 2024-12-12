@@ -1,6 +1,9 @@
+#include <queue>
+
 class GLFWwindow;
 namespace Squirrel
 {
+class Event;
 class WindowProperty;
 class WindowManager
 {
@@ -12,16 +15,22 @@ public:
 
   void DeInit();
 
+  bool IsInitialised();
+
   bool CreateWindow(WindowProperty& props);
 
   void CloseWindow();
 
   void SetVSync(const bool& enabled);
 
-  void OnUpdate();
+  void Update();
+
+  void SetEventCallbacks();
 
 private:
   bool is_initialised_ = false;
   GLFWwindow* window_;
 };
+
+extern std::queue<Event> pending_event_queue_;
 } // namespace Squirrel

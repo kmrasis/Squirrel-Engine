@@ -7,19 +7,23 @@ namespace Squirrel
 class KeyboardEvent : public Event
 {
 public:
-  KeyboardEvent(const EventType& event_type, const int& key_code, const int& repeat_count = 0);
+  KeyboardEvent(const EventType& event_type, const int& key, const int& scan_code, const int& mods);
   ~KeyboardEvent();
 
-  int GetKeyCode();
-  void SetKeyCode(const int& key_code);
+  int GetKey();
+  void SetKey(const int& key);
 
-  int GetRepeatCount();
-  void SetRepeatCount(const int& repeat_count);
+  int GetScanCode();
+  void SetScanCode(const int& scan_code);
+
+  int GetMods();
+  void SetMods(const int& mods);
 
   std::string Log() const override;
 
 protected:
-  int key_code_;
-  int repeat_count_;
+  int key_;
+  int scan_code_;
+  int mods_;
 };
 } // namespace Squirrel

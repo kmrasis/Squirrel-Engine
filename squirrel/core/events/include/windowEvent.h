@@ -7,19 +7,27 @@ namespace Squirrel
 class WindowEvent : public Event
 {
 public:
-  WindowEvent(const EventType& event_type, const float& height, const float& width);
+  WindowEvent(const EventType& event_type, const int& pos_x, const int& pos_y, const int& width, const int& height);
   ~WindowEvent();
 
-  float GetWindowHeight();
-  void SetWindowHeight(const float& height);
+  int GetWindowHeight();
+  void SetWindowHeight(const int& height);
 
-  float GetWindowWidth();
-  void SetWindowWidth(const float& width);
+  int GetWindowWidth();
+  void SetWindowWidth(const int& width);
+
+  int GetWindowPosX();
+  void SetWindowPosX(const int& pos_x);
+
+  int GetWindowPosY();
+  void SetWindowPosY(const int& pos_y);
 
   std::string Log() const override;
 
 protected:
-  float height_;
-  float width_;
+  int height_;
+  int width_;
+  int position_x_;
+  int position_y_;
 };
 } // namespace Squirrel

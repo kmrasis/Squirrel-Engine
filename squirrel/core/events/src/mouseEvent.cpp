@@ -5,35 +5,35 @@
 namespace Squirrel
 {
 
-MouseEvent::MouseEvent(const EventType& event_type, const float& pos_x, const float& pos_y, const float& off_x,
-                       const float& off_y, const int& button, const int& repeat_count)
+MouseEvent::MouseEvent(const EventType& event_type, const double& pos_x, const double& pos_y, const double& off_x,
+                       const double& off_y, const int& button, const int& mods)
     : Event(event_type),
       position_x_(pos_x),
       position_y_(pos_y),
       offset_x_(off_x),
       offset_y_(off_y),
       button_(button),
-      repeat_count_(repeat_count)
+      mods_(mods)
 {}
 MouseEvent::~MouseEvent() = default;
 
-float MouseEvent::GetPositionX() { return position_x_; }
-void MouseEvent::SetPositionX(const float& pos_x) { position_x_ = pos_x; }
+double MouseEvent::GetPositionX() { return position_x_; }
+void MouseEvent::SetPositionX(const double& pos_x) { position_x_ = pos_x; }
 
-float MouseEvent::GetPositionY() { return position_y_; }
-void MouseEvent::SetPositionY(const float& pos_y) { position_y_ = pos_y; }
+double MouseEvent::GetPositionY() { return position_y_; }
+void MouseEvent::SetPositionY(const double& pos_y) { position_y_ = pos_y; }
 
-float MouseEvent::GetOffsetX() { return offset_x_; }
-void MouseEvent::SetOffsetX(const float& off_x) { offset_x_ = off_x; }
+double MouseEvent::GetOffsetX() { return offset_x_; }
+void MouseEvent::SetOffsetX(const double& off_x) { offset_x_ = off_x; }
 
-float MouseEvent::GetOffsetY() { return offset_y_; }
-void MouseEvent::SetOffsetY(const float& off_y) { offset_y_ = off_y; }
+double MouseEvent::GetOffsetY() { return offset_y_; }
+void MouseEvent::SetOffsetY(const double& off_y) { offset_y_ = off_y; }
 
-float MouseEvent::GetButton() { return button_; }
-void MouseEvent::SetButton(const float& button) { button_ = button; }
+int MouseEvent::GetButton() { return button_; }
+void MouseEvent::SetButton(const int& button) { button_ = button; }
 
-float MouseEvent::GetRepeatCount() { return repeat_count_; }
-void MouseEvent::SetRepeatCount(const float& repeat_count) { repeat_count_ = repeat_count; }
+int MouseEvent::GetMods() { return mods_; }
+void MouseEvent::SetMods(const int& mods) { mods_ = mods; }
 
 std::string MouseEvent::Log() const
 {
@@ -45,7 +45,7 @@ std::string MouseEvent::Log() const
   ss << ", offsetX : " << offset_x_;
   ss << ", offsetY : " << offset_y_;
   ss << ", Button : " << button_;
-  ss << ", Repeat : " << repeat_count_;
+  ss << ", Mods : " << mods_;
   return ss.str();
 }
 } // namespace Squirrel

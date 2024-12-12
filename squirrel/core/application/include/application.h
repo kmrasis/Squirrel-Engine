@@ -4,7 +4,7 @@
 
 namespace Squirrel
 {
-class WindowManager;
+class EventManager;
 class Application
 {
 public:
@@ -18,7 +18,7 @@ public:
 
 private:
   bool is_running = false;
-  std::unique_ptr<WindowManager> window_manager_;
+  std::unique_ptr<EventManager> event_manager_;
 };
 
 // To be defined in client

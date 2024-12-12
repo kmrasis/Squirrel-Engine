@@ -7,7 +7,6 @@ target_include_directories(squirrel_application PUBLIC
 
 )
 target_link_libraries(squirrel_application PUBLIC
-    squirrel_events
     utils_logger
-    window_manager
+    squirrel_event_manager
 )

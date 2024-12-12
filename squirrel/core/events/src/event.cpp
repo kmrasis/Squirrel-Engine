@@ -46,6 +46,8 @@ std::string Event::GetEventName() const
       return "KeyPress";
     case EventType::KeyRelease:
       return "KeyRelease";
+    case EventType::KeyRepeat:
+      return "KeyRepeat";
     case EventType::MouseButtonPress:
       return "MouseButtonPress";
     case EventType::MouseButtonRelease:

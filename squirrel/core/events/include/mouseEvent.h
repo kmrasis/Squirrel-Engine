@@ -7,37 +7,37 @@ namespace Squirrel
 class MouseEvent : public Event
 {
 public:
-  MouseEvent(const EventType& event_type, const float& pos_x, const float& pos_y, const float& off_x,
-             const float& off_y, const int& button, const int& repeat_count = 0);
+  MouseEvent(const EventType& event_type, const double& pos_x, const double& pos_y, const double& off_x,
+             const double& off_y, const int& button, const int& mods);
   ~MouseEvent();
 
-  float GetPositionX();
-  void SetPositionX(const float& pos_x);
+  double GetPositionX();
+  void SetPositionX(const double& pos_x);
 
-  float GetPositionY();
-  void SetPositionY(const float& pos_y);
+  double GetPositionY();
+  void SetPositionY(const double& pos_y);
 
-  float GetOffsetX();
-  void SetOffsetX(const float& off_x);
+  double GetOffsetX();
+  void SetOffsetX(const double& off_x);
 
-  float GetOffsetY();
-  void SetOffsetY(const float& off_y);
+  double GetOffsetY();
+  void SetOffsetY(const double& off_y);
 
-  float GetButton();
-  void SetButton(const float& button);
+  int GetButton();
+  void SetButton(const int& button);
 
-  float GetRepeatCount();
-  void SetRepeatCount(const float& repeat_count);
+  int GetMods();
+  void SetMods(const int& mods);
 
   std::string Log() const override;
 
 protected:
-  float position_x_;
-  float position_y_;
-  float offset_x_;
-  float offset_y_;
+  double position_x_;
+  double position_y_;
+  double offset_x_;
+  double offset_y_;
 
   int button_;
-  int repeat_count_;
+  int mods_;
 };
 } // namespace Squirrel

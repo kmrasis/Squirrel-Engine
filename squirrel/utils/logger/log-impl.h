@@ -110,7 +110,7 @@ public:
   {
 #ifdef SQ_ENABLE_TRACE_LOGGING
     // Use rotating file sink for debug logs
-    core_logger_ = spdlog::rotating_logger_mt("core_logger", "logs/output.log", 1048576 * 5, 3);
+    core_logger_ = spdlog::rotating_logger_mt("core_logger", "logs/output.log", 1048576 * 100, 3);
     core_logger_->set_level(spdlog::level::trace);
     core_logger_->flush_on(spdlog::level::info);
     core_logger_->set_pattern("[%Y-%m-%d %X.%e] [%P] [%l] %!() in %s:%# %v");

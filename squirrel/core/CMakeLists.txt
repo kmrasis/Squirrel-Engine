@@ -1,3 +1,4 @@
 add_subdirectory(application)
 add_subdirectory(events)
 add_subdirectory(window_manager)
+add_subdirectory(event_manager)
