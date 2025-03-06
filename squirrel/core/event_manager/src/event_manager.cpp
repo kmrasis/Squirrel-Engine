@@ -48,14 +48,13 @@ void EventManager::DispatchEvents()
   // Process Events from queue
   if (pending_event_queue_.size())
   {
-    Event& event = pending_event_queue_.front();
+    std::shared_ptr<Event> event = pending_event_queue_.front();
     pending_event_queue_.pop();
-    if (EventType::WindowClose == event.GetEventType())
+    if (EventType::WindowClose == event->GetEventType())
     {
       window_manager_->CloseWindow();
       is_running = false;
     }
   }
 }
-
 } // namespace Squirrel

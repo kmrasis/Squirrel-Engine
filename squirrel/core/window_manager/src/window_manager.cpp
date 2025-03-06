@@ -91,7 +91,7 @@ void WindowManager::SetEventCallbacks()
                                [](GLFWwindow* window)
                                {
                                  WindowEvent window_closed_event(EventType::WindowClose, 0, 0, 0, 0);
-                                 pending_event_queue_.push(window_closed_event);
+                                 pending_event_queue_.push(std::make_shared<WindowEvent>(window_closed_event));
                                  LOG_TRACE("Pushed Event to queue : [{}] ", window_closed_event.Log());
                                });
 
@@ -102,7 +102,7 @@ void WindowManager::SetEventCallbacks()
                                  EventType event_type
                                      = (GLFW_TRUE == focused) ? EventType::WindowFocus : EventType::WindowUnfocus;
                                  WindowEvent window_focus_event(event_type, 0, 0, 0, 0);
-                                 pending_event_queue_.push(window_focus_event);
+                                 pending_event_queue_.push(std::make_shared<WindowEvent>(window_focus_event));
                                  LOG_TRACE("Pushed Event to queue : [{}] ", window_focus_event.Log());
                                });
 
@@ -111,7 +111,7 @@ void WindowManager::SetEventCallbacks()
                                    [](GLFWwindow* window, int width, int height)
                                    {
                                      WindowEvent window_resize_event(EventType::WindowResize, 0, 0, width, height);
-                                     pending_event_queue_.push(window_resize_event);
+                                     pending_event_queue_.push(std::make_shared<WindowEvent>(window_resize_event));
                                      LOG_TRACE("Pushed Event to queue : [{}] ", window_resize_event.Log());
                                    });
 
@@ -120,7 +120,7 @@ void WindowManager::SetEventCallbacks()
                              [](GLFWwindow* window, int xpos, int ypos)
                              {
                                WindowEvent window_moved_event(EventType::WindowMove, xpos, ypos, 0, 0);
-                               pending_event_queue_.push(window_moved_event);
+                               pending_event_queue_.push(std::make_shared<WindowEvent>(window_moved_event));
                                LOG_TRACE("Pushed Event to queue : [{}] ", window_moved_event.Log());
                              });
   }
@@ -149,7 +149,7 @@ void WindowManager::SetEventCallbacks()
                          }
 
                          KeyboardEvent key_event(event_type, key, scancode, mods);
-                         pending_event_queue_.push(key_event);
+                         pending_event_queue_.push(std::make_shared<KeyboardEvent>(key_event));
                          LOG_TRACE("Pushed Event to queue : [{}] ", key_event.Log());
                        });
   }
@@ -165,7 +165,7 @@ void WindowManager::SetEventCallbacks()
                                                                                : EventType::MouseButtonRelease;
 
                                  MouseEvent mouse_event(event_type, 0, 0, 0, 0, button, mods);
-                                 pending_event_queue_.push(mouse_event);
+                                 pending_event_queue_.push(std::make_shared<MouseEvent>(mouse_event));
                                  LOG_TRACE("Pushed Event to queue : [{}] ", mouse_event.Log());
                                });
 
@@ -174,7 +174,7 @@ void WindowManager::SetEventCallbacks()
                              [](GLFWwindow* window, double xpos, double ypos)
                              {
                                MouseEvent mouse_moved_event(EventType::MouseMove, xpos, ypos, 0, 0, 0, 0);
-                               pending_event_queue_.push(mouse_moved_event);
+                               pending_event_queue_.push(std::make_shared<MouseEvent>(mouse_moved_event));
                                LOG_TRACE("Pushed Event to queue : [{}] ", mouse_moved_event.Log());
                              });
 
@@ -183,7 +183,7 @@ void WindowManager::SetEventCallbacks()
                           [](GLFWwindow* window, double xoffset, double yoffset)
                           {
                             MouseEvent mouse_scroll_event(EventType::MouseScroll, 0, 0, xoffset, yoffset, 0, 0);
-                            pending_event_queue_.push(mouse_scroll_event);
+                            pending_event_queue_.push(std::make_shared<MouseEvent>(mouse_scroll_event));
                             LOG_TRACE("Pushed Event to queue : [{}] ", mouse_scroll_event.Log());
                           });
   }
@@ -232,5 +232,5 @@ void WindowManager::CloseWindow()
   CONSOLE_INFO("Window closed successfully");
 }
 
-std::queue<Event> pending_event_queue_;
+std::queue<std::shared_ptr<Event>> pending_event_queue_;
 } // namespace Squirrel

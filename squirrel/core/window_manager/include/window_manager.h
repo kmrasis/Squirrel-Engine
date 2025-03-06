@@ -1,5 +1,7 @@
 #include <queue>
 
+#include <memory>
+
 class GLFWwindow;
 namespace Squirrel
 {
@@ -32,5 +34,5 @@ private:
   GLFWwindow* window_;
 };
 
-extern std::queue<Event> pending_event_queue_;
+extern std::queue<std::shared_ptr<Event>> pending_event_queue_;
 } // namespace Squirrel
