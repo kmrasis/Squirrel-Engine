@@ -6,4 +6,6 @@ target_include_directories(ardilla PUBLIC
 
 target_link_libraries(ardilla
     squirrel
+    ardilla_layers
+    utils_logger
 )

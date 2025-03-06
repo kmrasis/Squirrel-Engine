@@ -10,8 +10,9 @@ namespace Squirrel
 EventManager::EventManager() {}
 EventManager::~EventManager() {}
 
-void EventManager::Init()
+void EventManager::Init(std::function<void(std::shared_ptr<Event>)> ls_callback)
 {
+  layer_stack_callback_ = ls_callback;
   // Initialise Window Manager to start getting events
   window_manager_ = std::make_unique<WindowManager>();
   window_manager_->Init();
@@ -52,9 +53,10 @@ void EventManager::DispatchEvents()
     pending_event_queue_.pop();
     if (EventType::WindowClose == event->GetEventType())
     {
-      window_manager_->CloseWindow();
       is_running = false;
     }
+
+    layer_stack_callback_(event);
   }
 }
 } // namespace Squirrel

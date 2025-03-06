@@ -62,7 +62,7 @@ std::string Event::GetEventName() const
   return "Unknown";
 }
 
-bool Event::IsHandled() { return is_handled_; }
+bool Event::IsHandled() const { return is_handled_; }
 void Event::SetAsHandled(const bool& is_handled) { is_handled_ = is_handled; }
 
 std::string Event::Log() const

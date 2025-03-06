@@ -23,11 +23,11 @@ public:
   EventType GetEventType();
   void SetEventType(const EventType& event_type);
 
-  bool IsHandled();
+  bool IsHandled() const;
   void SetAsHandled(const bool& is_handled);
 
   std::string GetEventName() const;
-  virtual std::string Log() const;
+  virtual inline std::string Log() const;
 
 protected:
   EventType event_type_;

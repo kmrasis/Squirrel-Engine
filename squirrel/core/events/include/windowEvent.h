@@ -22,7 +22,7 @@ public:
   int GetWindowPosY();
   void SetWindowPosY(const int& pos_y);
 
-  std::string Log() const override;
+  inline std::string Log() const override;
 
 protected:
   int height_;

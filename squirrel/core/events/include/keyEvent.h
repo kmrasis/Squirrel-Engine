@@ -19,7 +19,7 @@ public:
   int GetMods();
   void SetMods(const int& mods);
 
-  std::string Log() const override;
+  inline std::string Log() const override;
 
 protected:
   int key_;
