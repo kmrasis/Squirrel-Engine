@@ -69,6 +69,14 @@
   LOG_ERROR(__VA_ARGS__)
 
 #else
+
+// Empty Log message Marcos
+#define LOG_TRACE(...)
+#define LOG_DEBUG(...)
+#define LOG_INFO(...)
+#define LOG_WARN(...)
+#define LOG_ERROR(...)
+
 #define CONSOLE_INFO(...)                                                                                              \
   if (nullptr != ::Utils::Logger::GetConsoleLogger())                                                                  \
   {                                                                                                                    \
