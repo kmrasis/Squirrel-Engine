@@ -10,7 +10,7 @@ target_include_directories(ardilla_layers INTERFACE
     ${CMAKE_CURRENT_LIST_DIR}/include
 )
 
-target_link_libraries(ardilla_layers PUBLIC
+target_link_libraries(ardilla_layers
     squirrel_layers
     utils_logger
     squirrel_events

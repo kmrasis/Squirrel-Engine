@@ -6,8 +6,6 @@
 #include "layer.h"
 #include "layerstack.h"
 
-#include <unistd.h> // For timed loop, remove when not needed
-
 namespace Squirrel
 {
 

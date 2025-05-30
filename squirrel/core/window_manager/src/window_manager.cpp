@@ -7,8 +7,9 @@
 #include "windowEvent.h"
 #include "window_property.h"
 
+#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
-#include <GLFW/glfw3native.h>
 
 /**
  *  Squirrel Engine at this stage supports only single window
@@ -56,6 +57,11 @@ bool WindowManager::CreateWindow(WindowProperty& props)
 
   glfwMakeContextCurrent(window_);
   glfwSetWindowUserPointer(window_, &props);
+  int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+  if (status == 1)
+  {
+    CONSOLE_INFO("Glad Initialised successfully");
+  }
   SetVSync(true);
   SetEventCallbacks();
   return true;

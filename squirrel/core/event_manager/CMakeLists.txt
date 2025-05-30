@@ -7,7 +7,6 @@ set_target_properties(squirrel_event_manager PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_LIST_DIR}/include"
 )
 target_link_libraries(squirrel_event_manager
-    PUBLIC
     utils_logger
     squirrel_events
     squirrel_window_manager

@@ -6,7 +6,7 @@ target_include_directories(squirrel_application PUBLIC
     ${CMAKE_SOURCE_DIR}/squirrel/core/events/include
 
 )
-target_link_libraries(squirrel_application PUBLIC
+target_link_libraries(squirrel_application
     utils_logger
     squirrel_event_manager
     squirrel_layers
