@@ -1,9 +1,9 @@
 #include "application.h"
 #include "log-impl.h"
 
+#include "debug_layer.h"
 #include "event.h"
 #include "event_manager.h"
-#include "layer.h"
 #include "layerstack.h"
 
 namespace Squirrel
@@ -22,6 +22,8 @@ void Application::Init()
   event_manager_ = std::make_unique<EventManager>();
   event_manager_->Init([this](const std::shared_ptr<Event> event) { this->DispatchEventToLayers(event); });
   is_running = true;
+
+  layer_stack_->PushOverlay(new DebugLayer);
   CONSOLE_INFO("Initialised Squirrel Engine successfully");
 }
 

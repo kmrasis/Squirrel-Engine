@@ -21,7 +21,7 @@ public:
   std::vector<Layer*>::iterator end() { return layers_.end(); }
 
 private:
-  std::vector<Layer*> layers_;
-  std::vector<Layer*>::iterator layer_insert_;
+  std::vector<Layer*> layers_   = {};
+  unsigned int layers_inserted_ = 0;
 };
 } // namespace Squirrel

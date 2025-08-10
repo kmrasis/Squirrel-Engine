@@ -9,27 +9,35 @@ namespace Squirrel
 LayerStack::LayerStack()  = default;
 LayerStack::~LayerStack() = default;
 
-void LayerStack::Init()
-{
-  layer_insert_ = layers_.begin();
-  CONSOLE_INFO("Initialised Layerstack successfully");
-}
-void LayerStack::DeInit()
-{
-  for (Layer* layer : layers_)
-    delete layer;
-}
+void LayerStack::Init() { CONSOLE_INFO("Initialised Layerstack successfully"); }
+void LayerStack::DeInit() {}
 
-void LayerStack::PushLayer(Layer* layer) { layer_insert_ = layers_.emplace(layer_insert_, layer); }
-void LayerStack::PushOverlay(Layer* overlay) { layers_.emplace_back(overlay); }
+void LayerStack::PushLayer(Layer* layer)
+{
+  layers_.emplace(layers_.begin() + layers_inserted_, layer);
+  ++layers_inserted_;
+  layer->Attach();
+}
+void LayerStack::PushOverlay(Layer* overlay)
+{
+  layers_.emplace_back(overlay);
+  overlay->Attach();
+}
 
 void LayerStack::PopLayer(Layer* layer)
 {
-  auto it = std::find(layers_.begin(), layers_.end(), layer);
-  if (it != layers_.end())
+  auto first = layers_.begin();
+  auto last  = layers_.end() - layers_inserted_;
+  auto it    = std::find(first, last, layer);
+  if (it != last)
   {
+    Layer* layer = *it;
+    layer->Detach();
+
+    delete layer;
+    layer = nullptr;
     layers_.erase(it);
-    layer_insert_--;
+    --layers_inserted_;
   }
 }
 void LayerStack::PopOverlay(Layer* overlay)
