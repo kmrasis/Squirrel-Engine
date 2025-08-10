@@ -7,8 +7,8 @@ assignees: kmrasis
 
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+**Is your task related to a feature request? Please describe.**
+A clear and concise description of what the feature request is. Ex. Implementing feature xyz [...]
 
 **Describe the solution implemented**
 A clear and concise description of what you want to happen.
