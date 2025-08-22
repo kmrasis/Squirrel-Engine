@@ -26,7 +26,7 @@ void EventManager::Init()
     return;
   }
 
-  WindowProperty window_props = {"Squirrel Engine", true, 0, 0, 600, 800};
+  WindowProperty window_props = {"Squirrel Engine", true, 0, 0, 720, 1280};
   window_manager_->CreateWindow(window_props);
   is_initialised_ = true;
   CONSOLE_INFO("Initialised Event Manager successfully");

@@ -1,6 +1,7 @@
 #pragma once
 #include "layer.h"
 
+struct GLFWwindow;
 namespace Squirrel
 {
 class DebugLayer : public Layer
@@ -21,6 +22,7 @@ public:
   bool IsInitialised() { return is_initialised_; }
 
 private:
-  bool is_initialised_ = false;
+  bool is_initialised_  = false;
+  ::GLFWwindow* window_ = nullptr;
 };
 } // namespace Squirrel

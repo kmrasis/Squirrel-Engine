@@ -83,9 +83,7 @@ bool WindowManager::CreateWindow(WindowProperty& props)
   {
     CONSOLE_INFO("Initialised GLAD successfully");
   }
-  // Specify viewing are to be used by OpenGL:
-  // Bottom Left (0,0) to Top Right (width, Height)
-  glViewport(0, 0, props.Width, props.Height);
+
   SetVSync(true);
   SetEventCallbacks();
   return true;
@@ -117,9 +115,14 @@ void WindowManager::SwapBuffers()
 void WindowManager::StartNewFrame()
 {
   LOG_DEBUG("Clear screen to start new frame");
-  glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+  // Specify viewing area to be used by OpenGL:
+  // Bottom Left (0,0) to Top Right (width, Height)
+  int buff_width, buff_height;
+  glfwGetFramebufferSize(window_, &buff_width, &buff_height);
+  glViewport(0, 0, buff_width, buff_height);
 
   // Clear back buffer by assigning new color to it
+  glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 }
 

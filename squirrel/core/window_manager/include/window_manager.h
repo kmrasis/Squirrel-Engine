@@ -2,7 +2,7 @@
 
 #include <memory>
 
-class GLFWwindow;
+struct GLFWwindow;
 namespace Squirrel
 {
 class Event;
@@ -35,7 +35,7 @@ public:
 
 private:
   bool is_initialised_ = false;
-  GLFWwindow* window_;
+  ::GLFWwindow* window_;
   EventQPropertyPair* window_user_pointer_;
 };
 

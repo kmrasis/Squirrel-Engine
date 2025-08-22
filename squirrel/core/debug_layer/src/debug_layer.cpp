@@ -11,6 +11,7 @@ Squirrel::DebugLayer::~DebugLayer() = default;
 
 void Squirrel::DebugLayer::Init(void* window)
 {
+  window_ = (GLFWwindow*)window;
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGui::StyleColorsDark();
@@ -19,8 +20,7 @@ void Squirrel::DebugLayer::Init(void* window)
   io.BackendFlags |= ImGuiBackendFlags_HasSetMousePos;
 
   is_initialised_ = ImGui_ImplOpenGL3_Init("#version 410");
-  is_initialised_ = is_initialised_ && ImGui_ImplGlfw_InitForOpenGL((::GLFWwindow*)window, false);
-
+  is_initialised_ = is_initialised_ && ImGui_ImplGlfw_InitForOpenGL(window_, false);
   if (!is_initialised_)
   {
     CONSOLE_ERROR("Failed to initialise ImGUI");
