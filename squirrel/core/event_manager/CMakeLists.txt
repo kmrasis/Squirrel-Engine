@@ -8,6 +8,7 @@ set_target_properties(squirrel_event_manager PROPERTIES
 )
 target_link_libraries(squirrel_event_manager
     utils_logger
+    squirrel_layers
     squirrel_events
     squirrel_window_manager
 )

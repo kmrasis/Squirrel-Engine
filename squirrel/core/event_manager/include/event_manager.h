@@ -5,22 +5,25 @@ namespace Squirrel
 {
 class Event;
 class WindowManager;
+class LayerStack;
 class EventManager
 {
 public:
-  EventManager();
+  EventManager(LayerStack& layerstack);
   ~EventManager();
 
-  void Init(std::function<void(std::shared_ptr<Event>)> ls_callback);
+  void Init();
   void DeInit();
 
+  bool IsInitialised() { return is_initialised_; }
   bool IsRunning();
-
   void DispatchEvents();
 
+  WindowManager& GetWindowRef();
+
 private:
-  bool is_running = false;
+  bool is_initialised_ = false;
   std::unique_ptr<WindowManager> window_manager_;
-  std::function<void(std::shared_ptr<Event>)> layer_stack_callback_;
+  LayerStack& layerstack_;
 };
 } // namespace Squirrel
