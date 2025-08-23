@@ -5,7 +5,6 @@
 #include "imgui_impl_opengl3.h"
 
 #include "appEvent.h"
-#include "event.h"
 #include "keyEvent.h"
 #include "mouseEvent.h"
 #include "windowEvent.h"
@@ -69,27 +68,9 @@ void Squirrel::DebugLayer::HandleEvent(const std::shared_ptr<Event> event)
   LOG_TRACE("SQUIRREL :: Received event in layer : {}. EVENT DATA: [{}]", debug_name_, event->Log());
   switch (event->GetEventType())
   {
-    case EventType::WindowClose:
-      ProcessWindowCloseEvent(std::static_pointer_cast<WindowCloseEvent>(event));
-      break;
-
-    case EventType::WindowMove:
-      ProcessWindowMoveEvent(std::static_pointer_cast<WindowMoveEvent>(event));
-      break;
-
     case EventType::WindowFocus:
     case EventType::WindowUnfocus:
       ProcessWindowFocusEvent(std::static_pointer_cast<WindowFocusEvent>(event));
-      break;
-
-    case EventType::WindowResize:
-      ProcessWindowResizeEvent(std::static_pointer_cast<WindowResizeEvent>(event));
-      break;
-
-    case EventType::AppTick:
-    case EventType::AppUpdate:
-    case EventType::AppRender:
-      ProcessAppEvent(std::static_pointer_cast<ApplicationEvent>(event));
       break;
 
     case EventType::KeyPress:
@@ -116,25 +97,15 @@ void Squirrel::DebugLayer::HandleEvent(const std::shared_ptr<Event> event)
       break;
 
     default:
-      CONSOLE_ERROR("Dropped unhandled event [{}]", event->Log());
+      LOG_DEBUG("Debug layer dropped unhandled event [{}]", event->Log());
       break;
   }
 }
 
-void Squirrel::DebugLayer::ProcessAppEvent(const std::shared_ptr<ApplicationEvent> app_event) {}
-void Squirrel::DebugLayer::ProcessWindowCloseEvent(const std::shared_ptr<WindowCloseEvent> window_close_event) {}
-void Squirrel::DebugLayer::ProcessWindowMoveEvent(const std::shared_ptr<WindowMoveEvent> window_move_event) {}
 void Squirrel::DebugLayer::ProcessWindowFocusEvent(const std::shared_ptr<WindowFocusEvent> window_focus_event)
 {
   ImGuiIO& io = ImGui::GetIO();
   io.AddFocusEvent(EventType::WindowFocus == window_focus_event->GetEventType());
-}
-
-void Squirrel::DebugLayer::ProcessWindowResizeEvent(const std::shared_ptr<WindowResizeEvent> window_resize_event)
-{
-  ImGuiIO& io                = ImGui::GetIO();
-  io.DisplaySize             = ImVec2(window_resize_event->GetWindowWidth(), window_resize_event->GetWindowHeight());
-  io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
 }
 
 void Squirrel::DebugLayer::ProcessMouseButtonEvent(const std::shared_ptr<MouseButtonEvent> mouse_button_event)
