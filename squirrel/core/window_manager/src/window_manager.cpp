@@ -141,8 +141,8 @@ void WindowManager::SetEventCallbacks()
                                  EventQueue& pending_event_queue_
                                      = static_cast<EventQPropertyPair*>(glfwGetWindowUserPointer(window))->first;
 
-                                 WindowEvent window_closed_event(EventType::WindowClose, 0, 0, 0, 0);
-                                 pending_event_queue_.push(std::make_shared<WindowEvent>(window_closed_event));
+                                 WindowCloseEvent window_closed_event(EventType::WindowClose);
+                                 pending_event_queue_.push(std::make_shared<WindowCloseEvent>(window_closed_event));
                                  LOG_TRACE("Pushed Event to queue : [{}] ", window_closed_event.Log());
                                });
 
@@ -154,21 +154,21 @@ void WindowManager::SetEventCallbacks()
                                      = static_cast<EventQPropertyPair*>(glfwGetWindowUserPointer(window))->first;
                                  EventType event_type
                                      = (GLFW_TRUE == focused) ? EventType::WindowFocus : EventType::WindowUnfocus;
-                                 WindowEvent window_focus_event(event_type, 0, 0, 0, 0);
-                                 pending_event_queue_.push(std::make_shared<WindowEvent>(window_focus_event));
+                                 WindowFocusEvent window_focus_event(event_type);
+                                 pending_event_queue_.push(std::make_shared<WindowFocusEvent>(window_focus_event));
                                  LOG_TRACE("Pushed Event to queue : [{}] ", window_focus_event.Log());
                                });
 
     // Window Resized Event Callback
-    glfwSetFramebufferSizeCallback(window_,
-                                   [](GLFWwindow* window, int width, int height)
-                                   {
-                                     EventQueue& pending_event_queue_
-                                         = static_cast<EventQPropertyPair*>(glfwGetWindowUserPointer(window))->first;
-                                     WindowEvent window_resize_event(EventType::WindowResize, 0, 0, width, height);
-                                     pending_event_queue_.push(std::make_shared<WindowEvent>(window_resize_event));
-                                     LOG_TRACE("Pushed Event to queue : [{}] ", window_resize_event.Log());
-                                   });
+    glfwSetFramebufferSizeCallback(
+        window_,
+        [](GLFWwindow* window, int width, int height)
+        {
+          EventQueue& pending_event_queue_ = static_cast<EventQPropertyPair*>(glfwGetWindowUserPointer(window))->first;
+          WindowResizeEvent window_resize_event(EventType::WindowResize, width, height);
+          pending_event_queue_.push(std::make_shared<WindowResizeEvent>(window_resize_event));
+          LOG_TRACE("Pushed Event to queue : [{}] ", window_resize_event.Log());
+        });
 
     // Window Moved Event Callback
     glfwSetWindowPosCallback(window_,
@@ -176,8 +176,8 @@ void WindowManager::SetEventCallbacks()
                              {
                                EventQueue& pending_event_queue_
                                    = static_cast<EventQPropertyPair*>(glfwGetWindowUserPointer(window))->first;
-                               WindowEvent window_moved_event(EventType::WindowMove, xpos, ypos, 0, 0);
-                               pending_event_queue_.push(std::make_shared<WindowEvent>(window_moved_event));
+                               WindowMoveEvent window_moved_event(EventType::WindowMove, xpos, ypos);
+                               pending_event_queue_.push(std::make_shared<WindowMoveEvent>(window_moved_event));
                                LOG_TRACE("Pushed Event to queue : [{}] ", window_moved_event.Log());
                              });
   }
@@ -206,10 +206,22 @@ void WindowManager::SetEventCallbacks()
                          }
                          EventQueue& pending_event_queue_
                              = static_cast<EventQPropertyPair*>(glfwGetWindowUserPointer(window))->first;
-                         KeyboardEvent key_event(event_type, key, scancode, mods);
-                         pending_event_queue_.push(std::make_shared<KeyboardEvent>(key_event));
+                         KeyPressEvent key_event(event_type, key, scancode, mods);
+                         pending_event_queue_.push(std::make_shared<KeyPressEvent>(key_event));
                          LOG_TRACE("Pushed Event to queue : [{}] ", key_event.Log());
                        });
+
+    // Key typed/char input
+    glfwSetCharCallback(window_,
+                        [](GLFWwindow* window, unsigned int c)
+                        {
+                          EventType event_type = EventType::KeyType;
+                          EventQueue& pending_event_queue_
+                              = static_cast<EventQPropertyPair*>(glfwGetWindowUserPointer(window))->first;
+                          KeyTypeEvent key_type_event(event_type, c);
+                          pending_event_queue_.push(std::make_shared<KeyTypeEvent>(key_type_event));
+                          LOG_TRACE("Pushed Event to queue : [{}] ", key_type_event.Log());
+                        });
   }
 
   // Set mouse/cursor Event Callbacks
@@ -222,8 +234,8 @@ void WindowManager::SetEventCallbacks()
         {
           EventType event_type = (GLFW_PRESS == action) ? EventType::MouseButtonPress : EventType::MouseButtonRelease;
           EventQueue& pending_event_queue_ = static_cast<EventQPropertyPair*>(glfwGetWindowUserPointer(window))->first;
-          MouseEvent mouse_event(event_type, 0, 0, 0, 0, button, mods);
-          pending_event_queue_.push(std::make_shared<MouseEvent>(mouse_event));
+          MouseButtonEvent mouse_event(event_type, button, mods);
+          pending_event_queue_.push(std::make_shared<MouseButtonEvent>(mouse_event));
           LOG_TRACE("Pushed Event to queue : [{}] ", mouse_event.Log());
         });
 
@@ -233,8 +245,8 @@ void WindowManager::SetEventCallbacks()
                              {
                                EventQueue& pending_event_queue_
                                    = static_cast<EventQPropertyPair*>(glfwGetWindowUserPointer(window))->first;
-                               MouseEvent mouse_moved_event(EventType::MouseMove, xpos, ypos, 0, 0, 0, 0);
-                               pending_event_queue_.push(std::make_shared<MouseEvent>(mouse_moved_event));
+                               MouseMoveEvent mouse_moved_event(EventType::MouseMove, xpos, ypos);
+                               pending_event_queue_.push(std::make_shared<MouseMoveEvent>(mouse_moved_event));
                                LOG_TRACE("Pushed Event to queue : [{}] ", mouse_moved_event.Log());
                              });
 
@@ -244,8 +256,8 @@ void WindowManager::SetEventCallbacks()
                           {
                             EventQueue& pending_event_queue_
                                 = static_cast<EventQPropertyPair*>(glfwGetWindowUserPointer(window))->first;
-                            MouseEvent mouse_scroll_event(EventType::MouseScroll, 0, 0, xoffset, yoffset, 0, 0);
-                            pending_event_queue_.push(std::make_shared<MouseEvent>(mouse_scroll_event));
+                            MouseScrollEvent mouse_scroll_event(EventType::MouseScroll, xoffset, yoffset);
+                            pending_event_queue_.push(std::make_shared<MouseScrollEvent>(mouse_scroll_event));
                             LOG_TRACE("Pushed Event to queue : [{}] ", mouse_scroll_event.Log());
                           });
   }

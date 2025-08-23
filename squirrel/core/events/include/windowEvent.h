@@ -4,30 +4,47 @@
 
 namespace Squirrel
 {
-class WindowEvent : public Event
+class WindowCloseEvent : public Event
 {
 public:
-  WindowEvent(const EventType& event_type, const int& pos_x, const int& pos_y, const int& width, const int& height);
-  ~WindowEvent();
+  WindowCloseEvent(const EventType& event_type);
+  ~WindowCloseEvent();
+};
 
-  int GetWindowHeight();
-  void SetWindowHeight(const int& height);
+class WindowFocusEvent : public Event
+{
+public:
+  WindowFocusEvent(const EventType& event_type);
+  ~WindowFocusEvent();
+};
 
-  int GetWindowWidth();
-  void SetWindowWidth(const int& width);
+class WindowMoveEvent : public Event
+{
+public:
+  WindowMoveEvent(const EventType& event_type, const int& pos_x, const int& pos_y);
+  ~WindowMoveEvent();
 
-  int GetWindowPosX();
-  void SetWindowPosX(const int& pos_x);
+  int GetWindowPosX() const;
+  int GetWindowPosY() const;
+  const std::string Log() const override;
 
-  int GetWindowPosY();
-  void SetWindowPosY(const int& pos_y);
-
-  inline std::string Log() const override;
-
-protected:
-  int height_;
-  int width_;
+private:
   int position_x_;
   int position_y_;
+};
+
+class WindowResizeEvent : public Event
+{
+public:
+  WindowResizeEvent(const EventType& event_type, const int& width, const int& height);
+  ~WindowResizeEvent();
+
+  int GetWindowHeight();
+  int GetWindowWidth();
+  const std::string Log() const override;
+
+private:
+  int height_;
+  int width_;
 };
 } // namespace Squirrel

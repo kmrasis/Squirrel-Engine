@@ -4,36 +4,53 @@
 
 namespace Squirrel
 {
+// WindowCloseEvent Impl
+WindowCloseEvent::WindowCloseEvent(const EventType& event_type)
+    : Event(event_type)
+{}
+WindowCloseEvent::~WindowCloseEvent() = default;
 
-WindowEvent::WindowEvent(const EventType& event_type, const int& pos_x, const int& pos_y, const int& width,
-                         const int& height)
+// WindowFocusEvent Impl
+WindowFocusEvent ::WindowFocusEvent(const EventType& event_type)
+    : Event(event_type)
+{}
+WindowFocusEvent::~WindowFocusEvent() = default;
+
+// WindowMoveEvent Impl
+WindowMoveEvent::WindowMoveEvent(const EventType& event_type, const int& pos_x, const int& pos_y)
     : Event(event_type),
       position_x_(pos_x),
-      position_y_(pos_y),
-      width_(width),
-      height_(height)
+      position_y_(pos_y)
 {}
-WindowEvent::~WindowEvent() = default;
+WindowMoveEvent::~WindowMoveEvent() = default;
 
-int WindowEvent::GetWindowHeight() { return height_; }
-void WindowEvent::SetWindowHeight(const int& height) { height_ = height; }
-
-int WindowEvent::GetWindowWidth() { return width_; }
-void WindowEvent::SetWindowWidth(const int& width) { width_ = width; }
-
-int WindowEvent::GetWindowPosX() { return position_x_; }
-void WindowEvent::SetWindowPosX(const int& pos_x) { position_x_ = pos_x; };
-
-int WindowEvent::GetWindowPosY() { return position_y_; };
-void WindowEvent::SetWindowPosY(const int& pos_y) { position_y_ = pos_y; };
-
-std::string WindowEvent::Log() const
+int WindowMoveEvent::GetWindowPosX() const { return position_x_; }
+int WindowMoveEvent::GetWindowPosY() const { return position_y_; }
+const std::string WindowMoveEvent::Log() const
 {
   std::stringstream ss;
   ss << "EventType : " << GetEventName();
-  ss << ", isHandled : " << is_handled_;
+  ss << ", isHandled : " << IsHandled();
   ss << ", window posX : " << position_x_;
   ss << ", window posY : " << position_y_;
+  return ss.str();
+}
+
+// WindowResizeEvent Impl
+WindowResizeEvent::WindowResizeEvent(const EventType& event_type, const int& width, const int& height)
+    : Event(event_type),
+      width_(width),
+      height_(height)
+{}
+WindowResizeEvent::~WindowResizeEvent() = default;
+
+int WindowResizeEvent::GetWindowHeight() { return height_; }
+int WindowResizeEvent::GetWindowWidth() { return width_; }
+const std::string WindowResizeEvent::Log() const
+{
+  std::stringstream ss;
+  ss << "EventType : " << GetEventName();
+  ss << ", isHandled : " << IsHandled();
   ss << ", windowHeight : " << height_;
   ss << ", windowWidth : " << width_;
   return ss.str();

@@ -29,7 +29,8 @@ enum class EventType : uint64_t
   AppRender          = 0x000000040000, // Application events end
   KeyPress           = 0x000010000000,
   KeyRelease         = 0x000020000000,
-  KeyRepeat          = 0x000040000000, // Keyboard events end
+  KeyRepeat          = 0x000040000000,
+  KeyType            = 0x000080000000, // Keyboard events end
   MouseButtonPress   = 0x010000000000,
   MouseButtonRelease = 0x020000000000,
   MouseMove          = 0x040000000000,

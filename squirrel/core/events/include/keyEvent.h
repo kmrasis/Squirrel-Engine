@@ -4,26 +4,33 @@
 
 namespace Squirrel
 {
-class KeyboardEvent : public Event
+class KeyPressEvent : public Event
 {
 public:
-  KeyboardEvent(const EventType& event_type, const int& key, const int& scan_code, const int& mods);
-  ~KeyboardEvent();
+  KeyPressEvent(const EventType& event_type, const int& key, const int& scan_code, const int& mods);
+  ~KeyPressEvent();
 
-  int GetKey();
-  void SetKey(const int& key);
+  int GetKey() const;
+  int GetScanCode() const;
+  int GetMods() const;
+  const std::string Log() const override;
 
-  int GetScanCode();
-  void SetScanCode(const int& scan_code);
-
-  int GetMods();
-  void SetMods(const int& mods);
-
-  inline std::string Log() const override;
-
-protected:
+private:
   int key_;
   int scan_code_;
   int mods_;
+};
+
+class KeyTypeEvent : public Event
+{
+public:
+  KeyTypeEvent(const EventType& event_type, const unsigned int& codepoint);
+  ~KeyTypeEvent();
+
+  unsigned int GetCodePoint() const;
+  const std::string Log() const override;
+
+private:
+  unsigned int codepoint_;
 };
 } // namespace Squirrel

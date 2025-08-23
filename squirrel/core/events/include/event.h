@@ -6,30 +6,19 @@
 
 namespace Squirrel
 {
-
-/*
- * Events in Squirrel are currently blocking, meaning when an event occurs it
- * immediately gets dispatched and must be dealt with right then an there.
- * For the future, a better strategy might be to buffer events in an event
- * bus and process them during the "event" part of the update stag
- */
-
 class Event
 {
 public:
   Event(const EventType& event_type, const bool& is_handled = false);
   ~Event();
 
-  EventType GetEventType();
-  void SetEventType(const EventType& event_type);
-
+  const EventType GetEventType() const;
   bool IsHandled() const;
   void SetAsHandled(const bool& is_handled);
+  const std::string GetEventName() const;
+  virtual const std::string Log() const;
 
-  std::string GetEventName() const;
-  virtual inline std::string Log() const;
-
-protected:
+private:
   EventType event_type_;
   bool is_handled_;
 };
