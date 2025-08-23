@@ -4,7 +4,7 @@
 
 namespace Squirrel
 {
-class Event;
+class Renderer;
 class EventManager;
 class LayerStack;
 class Layer;
@@ -18,16 +18,14 @@ public:
   void DeInit();
 
   void Run();
-
-  void DispatchEventToLayers(const std::shared_ptr<Event> event);
-
   void PushLayer(Layer* layer);
   void PushOverlay(Layer* layer);
 
 private:
-  bool is_running = false;
+  bool is_initialised_ = false;
   std::unique_ptr<EventManager> event_manager_;
   std::unique_ptr<LayerStack> layer_stack_;
+  std::unique_ptr<Renderer> renderer_;
 };
 
 // To be defined in client

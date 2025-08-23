@@ -2,9 +2,9 @@
 #include "log-impl.h"
 
 #include "debug_layer.h"
-#include "event.h"
 #include "event_manager.h"
 #include "layerstack.h"
+#include "renderer.h"
 
 namespace Squirrel
 {
@@ -19,46 +19,54 @@ void Application::Init()
   layer_stack_ = std::make_unique<LayerStack>();
   layer_stack_->Init();
 
-  event_manager_ = std::make_unique<EventManager>();
-  event_manager_->Init([this](const std::shared_ptr<Event> event) { this->DispatchEventToLayers(event); });
-  is_running = true;
+  event_manager_ = std::make_unique<EventManager>(*layer_stack_);
+  event_manager_->Init();
+  if (!event_manager_->IsInitialised()) // Check if glfw/glad are initialised
+  {
+    CONSOLE_ERROR("Failed to initialise Squirrel Engine");
+    return;
+  }
 
-  layer_stack_->PushOverlay(new DebugLayer);
+  DebugLayer* debug_layer = new DebugLayer;
+  layer_stack_->PushOverlay(debug_layer);
+  renderer_ = std::make_unique<Renderer>(event_manager_->GetWindowRef(), *layer_stack_, *debug_layer);
+  renderer_->Init();
+  if (!renderer_->IsInitialised()) // Check if ImGui is initialised
+  {
+    CONSOLE_ERROR("Failed to initialise Squirrel Engine");
+    return;
+  }
+
+  is_initialised_ = true;
   CONSOLE_INFO("Initialised Squirrel Engine successfully");
 }
 
 void Application::DeInit()
 {
   CONSOLE_INFO("DeInitialising Squirrel Engine");
-
-  layer_stack_->DeInit();
+  renderer_->DeInit();
   event_manager_->DeInit();
+  layer_stack_->DeInit();
   ::Utils::Logger::DeInit();
-  is_running = false;
+  is_initialised_ = false;
 }
 
 void Application::Run()
 {
   CONSOLE_INFO("Booting up the Squirrel Engine!");
-  while (is_running && event_manager_->IsRunning())
+  while (is_initialised_ && event_manager_->IsRunning())
   {
-    layer_stack_->Update();
     event_manager_->DispatchEvents();
+    layer_stack_->Update();
+
+    renderer_->StartNewFrame();
+    renderer_->RenderLayers();
+    renderer_->ImGuiRenderLayers();
+    renderer_->DrawImGuiLayerFrame();
+    renderer_->SwapBuffers();
   }
 }
 
 void Application::PushLayer(Layer* layer) { layer_stack_->PushLayer(layer); }
 void Application::PushOverlay(Layer* layer) { layer_stack_->PushOverlay(layer); }
-
-void Application::DispatchEventToLayers(const std::shared_ptr<Event> event)
-{
-  for (auto it = layer_stack_->end(); it != layer_stack_->begin();)
-  {
-    auto& layer = *--it;
-    LOG_TRACE("Sending {} event to {} layer", event->GetEventName(), layer->GetName());
-    layer->HandleEvent(event);
-    if (event->IsHandled())
-      break;
-  }
-}
 } // namespace Squirrel

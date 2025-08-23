@@ -11,7 +11,7 @@ target_include_directories(squirrel_layers PUBLIC
     ${CMAKE_CURRENT_LIST_DIR}/include
 )
 target_link_libraries(squirrel_layers
-    PRIVATE
+    PUBLIC
     squirrel_events
     utils_logger
 )

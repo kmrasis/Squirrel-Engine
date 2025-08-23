@@ -14,6 +14,8 @@ public:
   virtual void Attach();
   virtual void Detach();
   virtual void Update();
+  virtual void Render();
+  virtual void ImGuiRender();
   virtual void HandleEvent(const std::shared_ptr<Event> event);
   inline const std::string& GetName() const { return debug_name_; };
 

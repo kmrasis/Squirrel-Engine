@@ -9,6 +9,6 @@ target_include_directories(squirrel_application PUBLIC
 target_link_libraries(squirrel_application
     utils_logger
     squirrel_event_manager
-    squirrel_layers
+    squirrel_renderer
     debug_layer
 )
