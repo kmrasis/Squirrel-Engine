@@ -8,6 +8,7 @@ target_link_libraries(squirrel_application PUBLIC
     utils_logger
     squirrel_layers
 PRIVATE
+    squirrel_input_poller
     squirrel_event_manager
     squirrel_renderer
     debug_layer

@@ -9,6 +9,7 @@ target_link_libraries(squirrel_window_manager PUBLIC
     utils_logger
     squirrel_events
 PRIVATE
+    squirrel_input_poller
     glfw
     glad
 )

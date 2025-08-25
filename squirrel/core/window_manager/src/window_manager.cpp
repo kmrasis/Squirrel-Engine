@@ -2,6 +2,7 @@
 #include "log-impl.h"
 
 #include "appEvent.h"
+#include "input_poller.h"
 #include "keyEvent.h"
 #include "mouseEvent.h"
 #include "windowEvent.h"
@@ -83,6 +84,7 @@ bool WindowManager::CreateWindow(WindowProperty& props)
     CONSOLE_INFO("Initialised GLAD successfully");
   }
 
+  InputPoller::Init(window_);
   SetVSync(true);
   SetEventCallbacks();
   return true;
@@ -300,6 +302,7 @@ void WindowManager::SetEventCallbacks()
 
 void WindowManager::CloseWindow()
 {
+  InputPoller::DeInit();
   glfwDestroyWindow(window_);
   window_ = nullptr;
   CONSOLE_INFO("Closed window successfully");
