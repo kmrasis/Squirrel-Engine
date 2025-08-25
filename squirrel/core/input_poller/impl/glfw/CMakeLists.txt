@@ -8,5 +8,5 @@ target_include_directories(glfw_input_poller PUBLIC
 target_link_libraries(glfw_input_poller PUBLIC
     utils_logger
 PRIVATE
-    glfw
+    dep_glfw
 )

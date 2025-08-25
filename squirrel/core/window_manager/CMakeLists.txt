@@ -10,6 +10,6 @@ target_link_libraries(squirrel_window_manager PUBLIC
     squirrel_events
 PRIVATE
     squirrel_input_poller
-    glfw
-    glad
+    dep_glfw
+    dep_glad
 )

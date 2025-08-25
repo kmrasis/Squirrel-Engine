@@ -7,6 +7,6 @@ target_include_directories(debug_layer PUBLIC
 target_link_libraries(debug_layer PUBLIC
     squirrel_events
 PRIVATE
-    imgui
+    dep_imgui
     squirrel_layers
 )
