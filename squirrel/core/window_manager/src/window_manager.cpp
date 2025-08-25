@@ -7,9 +7,8 @@
 #include "windowEvent.h"
 #include "window_property.h"
 
-#include <glad/glad.h>
-
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 /**
  *  Squirrel Engine at this stage supports only single window

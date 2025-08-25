@@ -6,5 +6,6 @@ target_include_directories(squirrel_renderer PUBLIC
 )
 target_link_libraries(squirrel_renderer PUBLIC
     debug_layer
+    squirrel_layers
     squirrel_window_manager
 )

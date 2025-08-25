@@ -16,7 +16,7 @@ KeyPressEvent::~KeyPressEvent() = default;
 int KeyPressEvent::GetKey() const { return key_; }
 int KeyPressEvent::GetScanCode() const { return scan_code_; }
 int KeyPressEvent::GetMods() const { return mods_; }
-const std::string KeyPressEvent::Log() const
+std::string KeyPressEvent::Log() const
 {
   std::stringstream ss;
   ss << "EventType : " << GetEventName();
@@ -35,7 +35,7 @@ KeyTypeEvent::KeyTypeEvent(const EventType& event_type, const unsigned int& code
 KeyTypeEvent::~KeyTypeEvent() = default;
 
 unsigned int KeyTypeEvent::GetCodePoint() const { return codepoint_; }
-const std::string KeyTypeEvent::Log() const
+std::string KeyTypeEvent::Log() const
 {
   std::stringstream ss;
   ss << "EventType : " << GetEventName();

@@ -26,7 +26,7 @@ public:
 
   int GetWindowPosX() const;
   int GetWindowPosY() const;
-  const std::string Log() const override;
+  std::string Log() const override;
 
 private:
   int position_x_;
@@ -41,10 +41,10 @@ public:
 
   int GetWindowHeight();
   int GetWindowWidth();
-  const std::string Log() const override;
+  std::string Log() const override;
 
 private:
-  int height_;
   int width_;
+  int height_;
 };
 } // namespace Squirrel

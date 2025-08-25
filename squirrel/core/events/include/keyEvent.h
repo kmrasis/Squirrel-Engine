@@ -13,7 +13,7 @@ public:
   int GetKey() const;
   int GetScanCode() const;
   int GetMods() const;
-  const std::string Log() const override;
+  std::string Log() const override;
 
 private:
   int key_;
@@ -28,7 +28,7 @@ public:
   ~KeyTypeEvent();
 
   unsigned int GetCodePoint() const;
-  const std::string Log() const override;
+  std::string Log() const override;
 
 private:
   unsigned int codepoint_;

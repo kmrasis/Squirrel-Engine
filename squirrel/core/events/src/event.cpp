@@ -9,8 +9,8 @@ Event::Event(const EventType& event_type, const bool& is_handled)
       is_handled_(is_handled)
 {}
 Event::~Event() = default;
-const EventType Event::GetEventType() const { return event_type_; }
-const std::string Event::GetEventName() const
+EventType Event::GetEventType() const { return event_type_; }
+std::string Event::GetEventName() const
 {
   switch (event_type_)
   {
@@ -36,6 +36,8 @@ const std::string Event::GetEventName() const
       return "KeyRelease";
     case EventType::KeyRepeat:
       return "KeyRepeat";
+    case EventType::KeyType:
+      return "KeyType";
     case EventType::MouseButtonPress:
       return "MouseButtonPress";
     case EventType::MouseButtonRelease:
@@ -47,12 +49,12 @@ const std::string Event::GetEventName() const
     case EventType::Unknown:
       return "Unknown";
   }
-  return "Unknown";
+  return "NotHandled";
 }
 
 bool Event::IsHandled() const { return is_handled_; }
 void Event::SetAsHandled(const bool& is_handled) { is_handled_ = is_handled; }
-const std::string Event::Log() const
+std::string Event::Log() const
 {
   std::stringstream ss;
   ss << "EventType : " << GetEventName();

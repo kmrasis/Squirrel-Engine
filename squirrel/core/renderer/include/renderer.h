@@ -21,8 +21,8 @@ public:
 
 private:
   bool is_initialised_ = false;
-  LayerStack& layerstack_;
   WindowManager& window_manager_;
+  LayerStack& layerstack_;
   DebugLayer& debug_layer_;
 };
 } // namespace Squirrel

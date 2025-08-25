@@ -14,7 +14,7 @@ MouseButtonEvent::~MouseButtonEvent() = default;
 
 int MouseButtonEvent::GetButton() const { return button_; }
 int MouseButtonEvent::GetMods() const { return mods_; }
-const std::string MouseButtonEvent::Log() const
+std::string MouseButtonEvent::Log() const
 {
   std::stringstream ss;
   ss << "EventType : " << GetEventName();
@@ -34,7 +34,7 @@ MouseMoveEvent::~MouseMoveEvent() = default;
 
 double MouseMoveEvent::GetPositionX() const { return position_x_; }
 double MouseMoveEvent::GetPositionY() const { return position_y_; }
-const std::string MouseMoveEvent::Log() const
+std::string MouseMoveEvent::Log() const
 {
   std::stringstream ss;
   ss << "EventType : " << GetEventName();
@@ -54,7 +54,7 @@ MouseScrollEvent::~MouseScrollEvent() = default;
 
 double MouseScrollEvent::GetOffsetX() const { return offset_x_; }
 double MouseScrollEvent::GetOffsetY() const { return offset_y_; }
-const std::string MouseScrollEvent::Log() const
+std::string MouseScrollEvent::Log() const
 {
   std::stringstream ss;
   ss << "EventType : " << GetEventName();
