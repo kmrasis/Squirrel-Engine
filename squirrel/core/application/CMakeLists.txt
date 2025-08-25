@@ -11,5 +11,5 @@ PRIVATE
     squirrel_input_poller
     squirrel_event_manager
     squirrel_renderer
-    debug_layer
+    squirrel_debug_layer
 )
