@@ -3,7 +3,6 @@
 
 #include "debug_layer.h"
 #include "event_manager.h"
-#include "input_poller.h"
 #include "layerstack.h"
 #include "renderer.h"
 
@@ -55,8 +54,6 @@ void Application::DeInit()
 void Application::Run()
 {
   CONSOLE_INFO("Booting up the Squirrel Engine!");
-
-  InputPoller& input_poller = InputPoller::GetInputPoller();
   while (is_initialised_ && event_manager_->IsRunning())
   {
     event_manager_->DispatchEvents();
@@ -67,8 +64,6 @@ void Application::Run()
     renderer_->ImGuiRenderLayers();
     renderer_->DrawImGuiLayerFrame();
     renderer_->SwapBuffers();
-    CONSOLE_INFO("'A' key pressed: [{}]", input_poller.IsKeyPressed(65));
-    CONSOLE_INFO("Mouse at: [{}, {}]", input_poller.GetCursorX(), input_poller.GetCursorY());
   }
 }
 
