@@ -12,7 +12,7 @@ public:
 
   int GetButton() const;
   int GetMods() const;
-  const std::string Log() const override;
+  std::string Log() const override;
 
 private:
   int button_;
@@ -27,7 +27,7 @@ public:
 
   double GetPositionX() const;
   double GetPositionY() const;
-  const std::string Log() const override;
+  std::string Log() const override;
 
 private:
   double position_x_;
@@ -42,7 +42,7 @@ public:
 
   double GetOffsetX() const;
   double GetOffsetY() const;
-  const std::string Log() const override;
+  std::string Log() const override;
 
 private:
   double offset_x_;

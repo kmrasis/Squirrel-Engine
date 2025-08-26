@@ -11,17 +11,6 @@ fi
 echo "Source Dir: ${SOURCE_DIR}"
 echo "Build Dir: ${BUILD_DIR}"
 
-while true; do
-read -p "Do you want to continue? (y/n) " yn
-
-case ${yn} in 
-    [yY] ) break;;
-    [nN] ) echo "Aborted" && exit 0;;
-    * )    echo "Invalid response";;
-esac
-done
-
-
 # Generate MakeFiles
 cmake -S${SOURCE_DIR} -B${BUILD_DIR} ${@}
 

@@ -2,14 +2,14 @@
 #include "log-impl.h"
 
 #include "appEvent.h"
+#include "input_poller.h"
 #include "keyEvent.h"
 #include "mouseEvent.h"
 #include "windowEvent.h"
 #include "window_property.h"
 
-#include <glad/glad.h>
-
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 /**
  *  Squirrel Engine at this stage supports only single window
@@ -84,6 +84,7 @@ bool WindowManager::CreateWindow(WindowProperty& props)
     CONSOLE_INFO("Initialised GLAD successfully");
   }
 
+  InputPoller::Init(window_);
   SetVSync(true);
   SetEventCallbacks();
   return true;
@@ -301,6 +302,7 @@ void WindowManager::SetEventCallbacks()
 
 void WindowManager::CloseWindow()
 {
+  InputPoller::DeInit();
   glfwDestroyWindow(window_);
   window_ = nullptr;
   CONSOLE_INFO("Closed window successfully");

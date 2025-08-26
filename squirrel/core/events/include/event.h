@@ -10,13 +10,13 @@ class Event
 {
 public:
   Event(const EventType& event_type, const bool& is_handled = false);
-  ~Event();
+  virtual ~Event();
 
-  const EventType GetEventType() const;
+  EventType GetEventType() const;
   bool IsHandled() const;
   void SetAsHandled(const bool& is_handled);
-  const std::string GetEventName() const;
-  virtual const std::string Log() const;
+  std::string GetEventName() const;
+  virtual std::string Log() const;
 
 private:
   EventType event_type_;

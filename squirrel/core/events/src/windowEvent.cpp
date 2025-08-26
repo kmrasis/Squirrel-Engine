@@ -26,7 +26,7 @@ WindowMoveEvent::~WindowMoveEvent() = default;
 
 int WindowMoveEvent::GetWindowPosX() const { return position_x_; }
 int WindowMoveEvent::GetWindowPosY() const { return position_y_; }
-const std::string WindowMoveEvent::Log() const
+std::string WindowMoveEvent::Log() const
 {
   std::stringstream ss;
   ss << "EventType : " << GetEventName();
@@ -46,7 +46,7 @@ WindowResizeEvent::~WindowResizeEvent() = default;
 
 int WindowResizeEvent::GetWindowHeight() { return height_; }
 int WindowResizeEvent::GetWindowWidth() { return width_; }
-const std::string WindowResizeEvent::Log() const
+std::string WindowResizeEvent::Log() const
 {
   std::stringstream ss;
   ss << "EventType : " << GetEventName();
