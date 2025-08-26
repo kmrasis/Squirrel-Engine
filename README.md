@@ -20,6 +20,9 @@
 #### 3rd party libraries
     glfw      : Pre-compiled Version 3.4
     spdlog    : Pre-compiled Version 1.15.0
+    glad      : Source  v0.1.36 --profile="compatibility" --api="gl=4.6"
+    imgui     : Source Version 1.92.0 
+    glm       : Header-only Version 1.0.1
 
 
 #### Build Method
@@ -36,20 +39,15 @@
     cd build
     ```
 
-- run cmake to generate necessary config files
-    ```
-    cmake ..
-    ```
-
-- start building
-    ```
-    make
-    ```
+- run build script to start compilation (use -DSQ_ENABLE_TRACE_LOGGING=ON for debug/trace logs)
+  ```
+  bash ../build.sh
+  ```
 
 #### Executing the program
 
 - After successfull build executable is generated at ardilla/ardilla
     ```
-    ./ardilla/ardilla
+    .ardilla/core/ardilla/ardilla
     ```
     

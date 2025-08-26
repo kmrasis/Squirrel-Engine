@@ -21,8 +21,6 @@ GLFWInputPoller::~GLFWInputPoller()
 bool GLFWInputPoller::IsKeyPressed(const int& keycode)
 {
   int state = glfwGetKey(window_, keycode);
-  if (state == GLFW_RELEASE)
-    CONSOLE_ERROR("key [{}], char_{} not pressed", keycode, (char)keycode);
   return state == GLFW_PRESS;
 }
 

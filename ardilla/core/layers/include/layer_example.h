@@ -8,5 +8,7 @@ public:
   void Attach() override;
   void Detach() override;
   void Update() override;
+  void Render() override;
+  void ImGuiRender() override;
   void HandleEvent(const std::shared_ptr<Squirrel::Event> event) override;
 };
