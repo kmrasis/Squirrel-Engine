@@ -11,6 +11,7 @@ class WindowFocusEvent;
 class MouseButtonEvent;
 class MouseMoveEvent;
 class MouseScrollEvent;
+class Shader;
 class DebugLayer : public Layer
 {
 public:
@@ -37,5 +38,6 @@ public:
 private:
   bool is_initialised_  = false;
   ::GLFWwindow* window_ = nullptr;
+  static std::shared_ptr<Shader> shader_;
 };
 } // namespace Squirrel

@@ -10,4 +10,5 @@ PRIVATE
     dep_glad
     dep_imgui
     squirrel_layers
+    squirrel_shader
 )

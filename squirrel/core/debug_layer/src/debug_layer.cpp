@@ -2,6 +2,7 @@
 #include "log-impl.h"
 
 #include "glad/glad.h"
+#include "shader.h"
 
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -17,6 +18,7 @@ Squirrel::DebugLayer::DebugLayer()
 Squirrel::DebugLayer::~DebugLayer() = default;
 
 ImGuiKey ImGui_ImplGlfw_KeyToImGuiKey(int keycode, int scancode);
+std::shared_ptr<Squirrel::Shader> Squirrel::DebugLayer::shader_ = nullptr;
 void Squirrel::DebugLayer::Init(void* window)
 {
   window_ = (GLFWwindow*)window;
@@ -54,6 +56,10 @@ void Squirrel::DebugLayer::Init(void* window)
 }
 void Squirrel::DebugLayer::DeInit()
 {
+  if (shader_)
+  {
+    shader_.reset();
+  }
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
@@ -97,58 +103,12 @@ void Squirrel::DebugLayer::Render()
       5, 6, 4  // 7
   };
   static GLuint VAO, VBO, EBO;
-  static GLuint shaderProgram = glCreateProgram();
+  shader_ = Shader::CreateShader(nullptr, nullptr);
 
   static bool first_call = true;
   if (first_call)
   {
     first_call = false;
-
-    // Vertex Shader source
-    const char* vertexShaderSource = R"glsl(
-#version 330 core
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec3 aColor;
-
-out vec3 vertexColor;
-
-void main()
-{
-    gl_Position = vec4(aPos, 1.0);
-    vertexColor = aColor;
-}
-)glsl";
-
-    // Fragment Shader source
-    const char* fragmentShaderSource = R"glsl(
-#version 330 core
-in vec3 vertexColor;
-out vec4 FragColor;
-
-void main()
-{
-    FragColor = vec4(vertexColor, 1.0);
-}
-)glsl";
-
-    // Create and compile vertex shader
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    // Create and compile fragment shader
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    // Create a shader program and attach vertex and fragment shaders to it.
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    // Delete now useless shaders
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -175,7 +135,7 @@ void main()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
   }
-  glUseProgram(shaderProgram);
+  shader_->Bind();
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, (void*)0);
 }
