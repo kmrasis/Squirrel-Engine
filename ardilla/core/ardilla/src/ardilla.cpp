@@ -4,7 +4,6 @@
 Ardilla::Ardilla()
     : Application()
 {
-  Init();
   PushLayer(new ExampleLayer());
 }
 Ardilla::~Ardilla() = default;

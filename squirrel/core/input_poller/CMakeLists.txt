@@ -7,7 +7,8 @@ INTERFACE
 )
 target_link_libraries(squirrel_input_poller
 PRIVATE
-    glfw_input_poller
+    squirrel_config
+    $<$<BOOL:${SQUIRREL_USE_GLFW}>:glfw_input_poller>
 )
 
 add_subdirectory(impl/glfw)

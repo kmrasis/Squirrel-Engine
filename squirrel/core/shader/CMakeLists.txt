@@ -7,7 +7,8 @@ INTERFACE
 )
 target_link_libraries(squirrel_shader
 PRIVATE
-    opengl_shader
+    squirrel_config
+    $<$<BOOL:${SQUIRREL_USE_OPENGL}>:opengl_shader>
 )
 
 add_subdirectory(impl/opengl)

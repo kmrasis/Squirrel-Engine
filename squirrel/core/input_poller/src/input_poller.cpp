@@ -1,4 +1,8 @@
+#include "Config.h"
+
+#ifdef SQUIRREL_USE_GLFW
 #include "glfw_input_poller.h"
+#endif
 
 namespace Squirrel
 {
@@ -7,7 +11,9 @@ void InputPoller::Init(void* window)
 {
   if (!instance_)
   {
+#ifdef SQUIRREL_USE_GLFW
     instance_ = std::make_unique<GLFWInputPoller>(window);
+#endif
   }
 }
 void InputPoller::DeInit()

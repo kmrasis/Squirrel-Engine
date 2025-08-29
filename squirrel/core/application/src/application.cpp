@@ -3,50 +3,40 @@
 
 #include "debug_layer.h"
 #include "event_manager.h"
+#include "graphics_context.h"
 #include "layerstack.h"
-#include "renderer.h"
+#include "window_manager.h"
 
 namespace Squirrel
 {
 
-Application::Application(){};
-Application::~Application(){};
-
-void Application::Init()
+Application::Application()
 {
   ::Utils::Logger::Init();
-
   layer_stack_ = std::make_unique<LayerStack>();
-  layer_stack_->Init();
 
-  event_manager_ = std::make_unique<EventManager>(*layer_stack_);
-  event_manager_->Init();
-  if (!event_manager_->IsInitialised()) // Check if glfw/glad are initialised
-  {
-    CONSOLE_ERROR("Failed to initialise Squirrel Engine");
-    return;
-  }
+  window_manager_.reset(WindowManager::CreateManager());
+  window_manager_->CreateWindow("Squirrel Engine", 1280, 720);
 
-  DebugLayer* debug_layer = new DebugLayer;
-  layer_stack_->PushOverlay(debug_layer);
-  renderer_ = std::make_unique<Renderer>(event_manager_->GetWindowRef(), *layer_stack_, *debug_layer);
-  renderer_->Init();
-  if (!renderer_->IsInitialised()) // Check if ImGui is initialised
-  {
-    CONSOLE_ERROR("Failed to initialise Squirrel Engine");
-    return;
-  }
+  event_manager_ = std::make_unique<EventManager>(window_manager_.get(), layer_stack_.get());
+
+  debug_layer_ = new DebugLayer();
+  debug_layer_->SetWindow(window_manager_->GetRawWindow());
+  layer_stack_->PushOverlay(debug_layer_);
+
+  graphics_context_.reset(GraphicsContext::CreateGraphicsContext());
 
   is_initialised_ = true;
   CONSOLE_INFO("Initialised Squirrel Engine successfully");
 }
 
-void Application::DeInit()
+Application::~Application()
 {
   CONSOLE_INFO("DeInitialising Squirrel Engine");
-  renderer_->DeInit();
-  event_manager_->DeInit();
-  layer_stack_->DeInit();
+  graphics_context_.reset();
+  layer_stack_.reset();
+  event_manager_.reset();
+  window_manager_.reset();
   ::Utils::Logger::DeInit();
   is_initialised_ = false;
 }
@@ -54,16 +44,22 @@ void Application::DeInit()
 void Application::Run()
 {
   CONSOLE_INFO("Booting up the Squirrel Engine!");
-  while (is_initialised_ && event_manager_->IsRunning())
+  while (is_initialised_ && !window_manager_->ShouldWindowClose())
   {
+    window_manager_->PollEvents();
     event_manager_->DispatchEvents();
-    layer_stack_->Update();
+    layer_stack_->UpdateLayers();
 
-    renderer_->StartNewFrame();
-    renderer_->RenderLayers();
-    renderer_->ImGuiRenderLayers();
-    renderer_->DrawImGuiLayerFrame();
-    renderer_->SwapBuffers();
+    int width, height;
+    window_manager_->GetWindowSize(&width, &height);
+    graphics_context_->StartNewFrame(width, height);
+    debug_layer_->StartNewFrame();
+
+    layer_stack_->RenderLayers();
+    layer_stack_->ImGuiRenderLayers();
+
+    debug_layer_->DrawFrame();
+    window_manager_->SwapBuffers();
   }
 }
 

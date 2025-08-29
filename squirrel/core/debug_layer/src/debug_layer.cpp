@@ -14,14 +14,16 @@
 #include "windowEvent.h"
 
 Squirrel::DebugLayer::DebugLayer()
-    : Layer("DebugLayer"){};
+    : Layer("DebugLayer")
+{}
 Squirrel::DebugLayer::~DebugLayer() = default;
 
 ImGuiKey ImGui_ImplGlfw_KeyToImGuiKey(int keycode, int scancode);
 std::shared_ptr<Squirrel::Shader> Squirrel::DebugLayer::shader_ = nullptr;
-void Squirrel::DebugLayer::Init(void* window)
+void Squirrel::DebugLayer::SetWindow(void* window) { window_ = (GLFWwindow*)window; }
+
+void Squirrel::DebugLayer::Attach()
 {
-  window_ = (GLFWwindow*)window;
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
   ImGui::StyleColorsDark();
@@ -54,7 +56,8 @@ void Squirrel::DebugLayer::Init(void* window)
   }
   CONSOLE_INFO("Initialised ImGUI Successfully");
 }
-void Squirrel::DebugLayer::DeInit()
+
+void Squirrel::DebugLayer::Detach()
 {
   if (shader_)
   {
@@ -66,8 +69,6 @@ void Squirrel::DebugLayer::DeInit()
   is_initialised_ = false;
   CONSOLE_INFO("DeInitialised ImGUI Successfully");
 }
-void Squirrel::DebugLayer::Attach() {}
-void Squirrel::DebugLayer::Detach() {}
 void Squirrel::DebugLayer::Update() {}
 void Squirrel::DebugLayer::StartNewFrame()
 {

@@ -4,18 +4,17 @@
 
 namespace Squirrel
 {
-class Renderer;
+class GraphicsContext;
+class WindowManager;
 class EventManager;
 class LayerStack;
 class Layer;
+class DebugLayer;
 class Application
 {
 public:
   Application();
   virtual ~Application();
-
-  void Init();
-  void DeInit();
 
   void Run();
   void PushLayer(Layer* layer);
@@ -23,9 +22,11 @@ public:
 
 private:
   bool is_initialised_ = false;
+  std::unique_ptr<WindowManager> window_manager_;
   std::unique_ptr<EventManager> event_manager_;
   std::unique_ptr<LayerStack> layer_stack_;
-  std::unique_ptr<Renderer> renderer_;
+  std::unique_ptr<GraphicsContext> graphics_context_;
+  DebugLayer* debug_layer_;
 };
 
 // To be defined in client

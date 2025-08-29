@@ -6,11 +6,8 @@
 
 namespace Squirrel
 {
-LayerStack::LayerStack()  = default;
-LayerStack::~LayerStack() = default;
-
-void LayerStack::Init() { CONSOLE_INFO("Initialised Layerstack successfully"); }
-void LayerStack::DeInit()
+LayerStack::LayerStack() { CONSOLE_INFO("Initialised Layerstack successfully"); }
+LayerStack::~LayerStack()
 {
   auto it = layers_.begin();
   while (it != layers_.end())
@@ -32,6 +29,7 @@ void LayerStack::PushLayer(Layer* layer)
   ++insert_pos_;
   CONSOLE_INFO("Pushed layer [{}] to stack. Stack Size [{}]", layer->GetName(), layers_.size());
 }
+
 void LayerStack::PushOverlay(Layer* overlay)
 {
   layers_.push_back(overlay);
@@ -55,6 +53,7 @@ void LayerStack::PopLayer(Layer* layer)
   delete layer; // Delete layer to ensure memory is released in both cases
   layer = nullptr;
 }
+
 void LayerStack::PopOverlay(Layer* overlay)
 {
   auto it = std::find(overlayBegin(), overlayEnd(), overlay);
@@ -71,12 +70,28 @@ void LayerStack::PopOverlay(Layer* overlay)
   overlay = nullptr;
 }
 
-void LayerStack::Update()
+void LayerStack::UpdateLayers()
 {
   LOG_DEBUG("Updating layerstack");
-  for (auto& layer : layers_)
+  for (auto it = rbegin(); it != rend(); ++it)
   {
-    layer->Update();
+    (*it)->Update();
+  }
+}
+
+void LayerStack::RenderLayers()
+{
+  for (auto it = rbegin(); it != rend(); ++it)
+  {
+    (*it)->Render();
+  }
+}
+
+void LayerStack::ImGuiRenderLayers()
+{
+  for (auto it = rbegin(); it != rend(); ++it)
+  {
+    (*it)->ImGuiRender();
   }
 }
 } // namespace Squirrel

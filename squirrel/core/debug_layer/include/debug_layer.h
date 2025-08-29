@@ -17,8 +17,7 @@ class DebugLayer : public Layer
 public:
   DebugLayer();
   ~DebugLayer();
-  void Init(void* window);
-  void DeInit();
+  void SetWindow(void* window);
   void StartNewFrame();
   void Attach() override;
   void Detach() override;
