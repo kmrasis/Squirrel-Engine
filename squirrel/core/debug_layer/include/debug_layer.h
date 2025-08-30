@@ -7,11 +7,12 @@ namespace Squirrel
 class KeyPressEvent;
 class KeyTypeEvent;
 class WindowFocusEvent;
-;
 class MouseButtonEvent;
 class MouseMoveEvent;
 class MouseScrollEvent;
 class Shader;
+class VertexBuffer;
+class IndexBuffer;
 class DebugLayer : public Layer
 {
 public:
@@ -37,6 +38,8 @@ public:
 private:
   bool is_initialised_  = false;
   ::GLFWwindow* window_ = nullptr;
-  static std::shared_ptr<Shader> shader_;
+  Shader* shader_;
+  VertexBuffer* vertex_buffer_;
+  IndexBuffer* index_buffer_;
 };
 } // namespace Squirrel

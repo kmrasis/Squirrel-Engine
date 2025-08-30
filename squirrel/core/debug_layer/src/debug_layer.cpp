@@ -1,8 +1,10 @@
 #include "debug_layer.h"
 #include "log-impl.h"
 
-#include "glad/glad.h"
+#include "buffers.h"
 #include "shader.h"
+
+#include "glad/glad.h"
 
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -19,7 +21,6 @@ Squirrel::DebugLayer::DebugLayer()
 Squirrel::DebugLayer::~DebugLayer() = default;
 
 ImGuiKey ImGui_ImplGlfw_KeyToImGuiKey(int keycode, int scancode);
-std::shared_ptr<Squirrel::Shader> Squirrel::DebugLayer::shader_ = nullptr;
 void Squirrel::DebugLayer::SetWindow(void* window) { window_ = (GLFWwindow*)window; }
 
 void Squirrel::DebugLayer::Attach()
@@ -54,15 +55,46 @@ void Squirrel::DebugLayer::Attach()
     CONSOLE_ERROR("Failed to initialise ImGUI");
     return;
   }
+
+  float vertices[] = {
+      // pos              // color
+      -0.2f, 0.7f,  0.0f, 0.2f, 0.7f, 0.0f, // 0
+      0.2f,  0.7f,  0.0f, 0.6f, 0.7f, 0.0f, // 1
+      -0.1f, 0.6f,  0.0f, 0.3f, 0.6f, 0.0f, // 2
+      0.1f,  0.6f,  0.0f, 0.5f, 0.6f, 0.0f, // 3
+      -0.1f, 0.2f,  0.0f, 0.3f, 0.2f, 0.0f, // 4
+      0.1f,  0.2f,  0.0f, 0.5f, 0.2f, 0.0f, // 5
+      -0.1f, 0.1f,  0.0f, 0.3f, 0.1f, 0.0f, // 6
+      0.2f,  0.1f,  0.0f, 0.5f, 0.1f, 0.0f, // 7
+      -0.2f, -0.7f, 0.0f, 0.2f, 0.7f, 0.0f, // 8
+      -0.1f, -0.7f, 0.0f, 0.3f, 0.7f, 0.0f, // 9
+  };
+  unsigned int indices[] = {
+      0, 2, 8, // 0
+      2, 8, 9, // 1
+      0, 1, 2, // 2
+      1, 2, 3, // 3
+      1, 3, 7, // 4
+      3, 7, 5, // 5
+      7, 5, 6, // 6
+      5, 6, 4  // 7
+  };
+  vertex_buffer_ = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices) / sizeof(vertices[0]));
+  index_buffer_  = IndexBuffer::CreateIndexBuffer(indices, sizeof(indices) / sizeof(indices[0]));
+  shader_        = Shader::CreateShader(nullptr, nullptr);
   CONSOLE_INFO("Initialised ImGUI Successfully");
 }
 
 void Squirrel::DebugLayer::Detach()
 {
-  if (shader_)
-  {
-    shader_.reset();
-  }
+  delete shader_;
+  delete vertex_buffer_;
+  delete index_buffer_;
+
+  shader_        = nullptr;
+  vertex_buffer_ = nullptr;
+  index_buffer_  = nullptr;
+
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
@@ -80,31 +112,7 @@ void Squirrel::DebugLayer::StartNewFrame()
 
 void Squirrel::DebugLayer::Render()
 {
-  static GLfloat vertices[] = {
-      // pos              // color
-      -0.2f, 0.7f,  0.0f, 0.2f, 0.7f, 0.0f, // 0
-      0.2f,  0.7f,  0.0f, 0.6f, 0.7f, 0.0f, // 1
-      -0.1f, 0.6f,  0.0f, 0.3f, 0.6f, 0.0f, // 2
-      0.1f,  0.6f,  0.0f, 0.5f, 0.6f, 0.0f, // 3
-      -0.1f, 0.2f,  0.0f, 0.3f, 0.2f, 0.0f, // 4
-      0.1f,  0.2f,  0.0f, 0.5f, 0.2f, 0.0f, // 5
-      -0.1f, 0.1f,  0.0f, 0.3f, 0.1f, 0.0f, // 6
-      0.2f,  0.1f,  0.0f, 0.5f, 0.1f, 0.0f, // 7
-      -0.2f, -0.7f, 0.0f, 0.2f, 0.7f, 0.0f, // 8
-      -0.1f, -0.7f, 0.0f, 0.3f, 0.7f, 0.0f, // 9
-  };
-  static GLuint indices[] = {
-      0, 2, 8, // 0
-      2, 8, 9, // 1
-      0, 1, 2, // 2
-      1, 2, 3, // 3
-      1, 3, 7, // 4
-      3, 7, 5, // 5
-      7, 5, 6, // 6
-      5, 6, 4  // 7
-  };
-  static GLuint VAO, VBO, EBO;
-  shader_ = Shader::CreateShader(nullptr, nullptr);
+  static GLuint VAO;
 
   static bool first_call = true;
   if (first_call)
@@ -112,16 +120,8 @@ void Squirrel::DebugLayer::Render()
     first_call = false;
 
     glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
     glBindVertexArray(VAO);
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, 60 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 24 * sizeof(GLuint), indices, GL_STATIC_DRAW);
     // Set Attributes for vertex/color attributes
     // (Attribute pos) (3 Data points: x,y,z for each) (stride)(offset/pos of 1st element)
 
@@ -132,10 +132,9 @@ void Squirrel::DebugLayer::Render()
     // Color attribute
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
   }
+  vertex_buffer_->Bind();
+  index_buffer_->Bind();
   shader_->Bind();
   glBindVertexArray(VAO);
   glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, (void*)0);

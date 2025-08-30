@@ -11,4 +11,5 @@ PRIVATE
     dep_imgui
     squirrel_layers
     squirrel_shader
+    squirrel_buffers
 )
