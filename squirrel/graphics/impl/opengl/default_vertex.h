@@ -1,7 +1,7 @@
-namespace Squirrel
+namespace Squirrel::GFX::OpenGL
 {
 // Vertex Shader source
-const char* vertexShaderSource = R"glsl(
+const char* default_vertex_src = R"glsl(
 #version 330 core
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aColor;
@@ -14,4 +14,4 @@ void main()
     vertexColor = aColor;
 }
 )glsl";
-} // namespace Squirrel
+} // namespace Squirrel::GFX::OpenGL

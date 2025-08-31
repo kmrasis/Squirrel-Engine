@@ -6,6 +6,7 @@ target_link_libraries(squirrel PUBLIC
 INTERFACE
     squirrel_layers
     squirrel_input_poller
+    squirrel_graphics
     dep_imgui
     dep_glm
 )
@@ -38,3 +39,4 @@ INTERFACE
 add_subdirectory(3rdParty)
 add_subdirectory(core)
 add_subdirectory(utils)
+add_subdirectory(graphics)

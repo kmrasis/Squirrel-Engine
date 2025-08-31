@@ -10,9 +10,13 @@ class WindowFocusEvent;
 class MouseButtonEvent;
 class MouseMoveEvent;
 class MouseScrollEvent;
-class Shader;
-class VertexBuffer;
-class IndexBuffer;
+
+namespace GFX
+{
+  class Mesh;
+  class Pipeline;
+} // namespace GFX
+
 class DebugLayer : public Layer
 {
 public:
@@ -38,8 +42,7 @@ public:
 private:
   bool is_initialised_  = false;
   ::GLFWwindow* window_ = nullptr;
-  Shader* shader_;
-  VertexBuffer* vertex_buffer_;
-  IndexBuffer* index_buffer_;
+  GFX::Mesh* mesh_;
+  GFX::Pipeline* pipeline_;
 };
 } // namespace Squirrel

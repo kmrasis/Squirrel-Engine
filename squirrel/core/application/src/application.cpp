@@ -7,6 +7,8 @@
 #include "layerstack.h"
 #include "window_manager.h"
 
+#include "device.h"
+
 namespace Squirrel
 {
 
@@ -15,6 +17,7 @@ Application::Application()
   ::Utils::Logger::Init();
   layer_stack_ = std::make_unique<LayerStack>();
 
+  GFX::Device::SetAPI(GFX::API::OpenGL);
   window_manager_.reset(WindowManager::CreateManager());
   window_manager_->CreateWindow("Squirrel Engine", 1280, 720);
 

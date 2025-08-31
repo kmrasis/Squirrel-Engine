@@ -1,10 +1,7 @@
 #include "debug_layer.h"
 #include "log-impl.h"
 
-#include "buffers.h"
-#include "shader.h"
-
-#include "glad/glad.h"
+#include "graphics.h"
 
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -67,7 +64,7 @@ void Squirrel::DebugLayer::Attach()
       -0.1f, 0.1f,  0.0f, 0.3f, 0.1f, 0.0f, // 6
       0.2f,  0.1f,  0.0f, 0.5f, 0.1f, 0.0f, // 7
       -0.2f, -0.7f, 0.0f, 0.2f, 0.7f, 0.0f, // 8
-      -0.1f, -0.7f, 0.0f, 0.3f, 0.7f, 0.0f, // 9
+      -0.1f, -0.7f, 0.0f, 0.3f, 0.7f, 0.0f  // 9
   };
   unsigned int indices[] = {
       0, 2, 8, // 0
@@ -79,21 +76,29 @@ void Squirrel::DebugLayer::Attach()
       7, 5, 6, // 6
       5, 6, 4  // 7
   };
-  vertex_buffer_ = VertexBuffer::CreateVertexBuffer(vertices, sizeof(vertices) / sizeof(vertices[0]));
-  index_buffer_  = IndexBuffer::CreateIndexBuffer(indices, sizeof(indices) / sizeof(indices[0]));
-  shader_        = Shader::CreateShader(nullptr, nullptr);
+  pipeline_ = GFX::Device::CreatePipeline(GFX::Device::CreateShader(nullptr, nullptr));
+
+  auto vtx_buffer
+      = GFX::Device::CreateBuffer(GFX::BufferType::Vertex, GFX::BufferUsage::Static, &vertices, sizeof(vertices));
+
+  GFX::VertexLayout vtx_layout = GFX::VertexLayout(6);
+  vtx_layout.AddAttribute(0, 0, 3);
+  vtx_layout.AddAttribute(1, 3, 3);
+
+  auto idx_buffer
+      = GFX::Device::CreateBuffer(GFX::BufferType::Index, GFX::BufferUsage::Static, &indices, sizeof(indices));
+
+  mesh_ = GFX::Device::CreateMesh(vtx_buffer, vtx_layout, 10, idx_buffer, 8);
   CONSOLE_INFO("Initialised ImGUI Successfully");
 }
 
 void Squirrel::DebugLayer::Detach()
 {
-  delete shader_;
-  delete vertex_buffer_;
-  delete index_buffer_;
+  delete pipeline_;
+  delete mesh_;
 
-  shader_        = nullptr;
-  vertex_buffer_ = nullptr;
-  index_buffer_  = nullptr;
+  pipeline_ = nullptr;
+  mesh_     = nullptr;
 
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
@@ -112,32 +117,8 @@ void Squirrel::DebugLayer::StartNewFrame()
 
 void Squirrel::DebugLayer::Render()
 {
-  static GLuint VAO;
-
-  static bool first_call = true;
-  if (first_call)
-  {
-    first_call = false;
-
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    // Set Attributes for vertex/color attributes
-    // (Attribute pos) (3 Data points: x,y,z for each) (stride)(offset/pos of 1st element)
-
-    // Vertex attributes
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // Color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-  }
-  vertex_buffer_->Bind();
-  index_buffer_->Bind();
-  shader_->Bind();
-  glBindVertexArray(VAO);
-  glDrawElements(GL_TRIANGLES, 24, GL_UNSIGNED_INT, (void*)0);
+  pipeline_->Bind();
+  mesh_->Draw();
 }
 void Squirrel::DebugLayer::ImGuiRender()
 {
