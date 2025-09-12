@@ -9,6 +9,9 @@ namespace Squirrel::GFX
 {
 API Device::api_ = API::None;
 
+std::unique_ptr<Shader> Device::default_shader_     = nullptr;
+std::unique_ptr<Pipeline> Device::default_pipeline_ = nullptr;
+
 API Device::GetAPI() { return api_; }
 void Device::SetAPI(const API& api)
 {
@@ -18,6 +21,22 @@ void Device::SetAPI(const API& api)
   } else
   {
     CONSOLE_ERROR("Runtime API change is not allowed.");
+  }
+  default_shader_.reset();
+  default_pipeline_.reset();
+}
+
+void Device::InitDefaults()
+{
+  switch (api_)
+  {
+    case API::OpenGL:
+      default_shader_.reset(new OpenGL::OpenGLShader(nullptr, nullptr));
+      default_pipeline_.reset(new OpenGL::OpenGLPipeline(default_shader_.get()));
+      break;
+
+    default:
+      break;
   }
 }
 
@@ -34,6 +53,12 @@ Buffer* Device::CreateBuffer(const BufferType& type, const BufferUsage& usage, c
 
 Shader* Device::CreateShader(const char* vertex_src, const char* fragment_src)
 {
+  if (!vertex_src && !fragment_src)
+  {
+    if (!Device::default_shader_)
+      InitDefaults();
+    return Device::default_shader_.get();
+  }
   switch (api_)
   {
     case API::OpenGL:
@@ -45,6 +70,12 @@ Shader* Device::CreateShader(const char* vertex_src, const char* fragment_src)
 
 Pipeline* Device::CreatePipeline(const Shader* shader)
 {
+  if (!shader)
+  {
+    if (!default_pipeline_)
+      InitDefaults();
+    return Device::default_pipeline_.get();
+  }
   switch (api_)
   {
     case API::OpenGL:
@@ -64,5 +95,10 @@ Mesh* Device::CreateMesh(Buffer* vtx_buffer, const VertexLayout& vtx_layout, con
   }
   CONSOLE_ERROR("Unknown API type. Failed to create Mesh");
   return nullptr;
+}
+void Device::CleanUp()
+{
+  default_pipeline_.reset();
+  default_shader_.reset();
 }
 } // namespace Squirrel::GFX

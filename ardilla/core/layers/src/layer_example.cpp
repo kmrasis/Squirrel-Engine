@@ -14,10 +14,7 @@ ExampleLayer::ExampleLayer()
     : Layer("Example"){};
 ExampleLayer ::~ExampleLayer() = default;
 
-void ExampleLayer::Attach()
-{
-  pipeline_ = Squirrel::GFX::Device::CreatePipeline(Squirrel::GFX::Device::CreateShader(nullptr, nullptr));
-}
+void ExampleLayer::Attach() { pipeline_ = Squirrel::GFX::Device::CreatePipeline(nullptr); }
 void ExampleLayer::Detach() {}
 void ExampleLayer::Update()
 {
@@ -63,6 +60,7 @@ void ExampleLayer::Render()
 {
   pipeline_->Bind();
   mesh_->Draw();
+  pipeline_->Unbind();
 }
 
 void ExampleLayer::ImGuiRender()

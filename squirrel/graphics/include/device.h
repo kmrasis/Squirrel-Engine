@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <memory>
 namespace Squirrel::GFX
 {
 
@@ -31,7 +32,13 @@ public:
   static Mesh* CreateMesh(Buffer* vtx_buffer, const VertexLayout& vtx_layout, const uint32_t& vtx_count,
                           Buffer* idx_buffer, const uint32_t& idx_count);
 
+  static void CleanUp();
+
 private:
+  static void InitDefaults();
+
+  static std::unique_ptr<Shader> default_shader_;
+  static std::unique_ptr<Pipeline> default_pipeline_;
   static API api_;
 };
 

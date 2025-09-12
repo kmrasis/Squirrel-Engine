@@ -38,6 +38,7 @@ Application::~Application()
   CONSOLE_INFO("DeInitialising Squirrel Engine");
   graphics_context_.reset();
   layer_stack_.reset();
+  GFX::Device::CleanUp();
   event_manager_.reset();
   window_manager_.reset();
   ::Utils::Logger::DeInit();

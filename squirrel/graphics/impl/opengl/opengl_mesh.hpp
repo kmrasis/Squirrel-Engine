@@ -17,7 +17,7 @@ public:
         idx_count_(idx_count)
   {
     glGenVertexArrays(1, &id_);
-    glBindVertexArray(id_);
+    Bind();
     vtx_buffer_->Bind();
     for (const auto& attr : vtx_layout_.GetAttributes())
     {
@@ -29,12 +29,13 @@ public:
                             (void*)(attr.offset * sizeof(float)));
       glEnableVertexAttribArray((GLuint)attr.location);
     }
-    vtx_buffer_->Unbind();
 
     if (idx_buffer_)
     {
       idx_buffer_->Bind();
     }
+    Unbind();
+    vtx_buffer_->Unbind();
   }
   ~OpenGLMesh()
   {

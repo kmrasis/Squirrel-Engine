@@ -76,7 +76,7 @@ void Squirrel::DebugLayer::Attach()
       7, 5, 6, // 6
       5, 6, 4  // 7
   };
-  pipeline_ = GFX::Device::CreatePipeline(GFX::Device::CreateShader(nullptr, nullptr));
+  pipeline_ = GFX::Device::CreatePipeline(nullptr);
 
   auto vtx_buffer
       = GFX::Device::CreateBuffer(GFX::BufferType::Vertex, GFX::BufferUsage::Static, &vertices, sizeof(vertices));
@@ -94,12 +94,6 @@ void Squirrel::DebugLayer::Attach()
 
 void Squirrel::DebugLayer::Detach()
 {
-  delete pipeline_;
-  delete mesh_;
-
-  pipeline_ = nullptr;
-  mesh_     = nullptr;
-
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
@@ -119,6 +113,7 @@ void Squirrel::DebugLayer::Render()
 {
   pipeline_->Bind();
   mesh_->Draw();
+  pipeline_->Unbind();
 }
 void Squirrel::DebugLayer::ImGuiRender()
 {
