@@ -13,4 +13,5 @@ PRIVATE
     squirrel_event_manager
     squirrel_graphics_context
     squirrel_debug_layer
+    squirrel_camera
 )

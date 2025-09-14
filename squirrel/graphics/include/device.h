@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <glm/glm.hpp>
 #include <memory>
 namespace Squirrel::GFX
 {
@@ -32,6 +33,7 @@ public:
   static Mesh* CreateMesh(Buffer* vtx_buffer, const VertexLayout& vtx_layout, const uint32_t& vtx_count,
                           Buffer* idx_buffer, const uint32_t& idx_count);
 
+  static void UpdateDefaultShaderViewProjectionMatrix(const ::glm::mat4& matrix);
   static void CleanUp();
 
 private:

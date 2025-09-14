@@ -1,6 +1,7 @@
 #include "application.h"
 #include "log-impl.h"
 
+#include "camera.h"
 #include "debug_layer.h"
 #include "event_manager.h"
 #include "graphics_context.h"
@@ -28,6 +29,7 @@ Application::Application()
   layer_stack_->PushOverlay(debug_layer_);
 
   graphics_context_.reset(GraphicsContext::CreateGraphicsContext());
+  camera_ = std::make_unique<OrthoCamera>(-1.0f, 1.0f, -1.0f, 1.0f);
 
   is_initialised_ = true;
   CONSOLE_INFO("Initialised Squirrel Engine successfully");
@@ -36,6 +38,7 @@ Application::Application()
 Application::~Application()
 {
   CONSOLE_INFO("DeInitialising Squirrel Engine");
+  camera_.reset();
   graphics_context_.reset();
   layer_stack_.reset();
   GFX::Device::CleanUp();
@@ -59,6 +62,7 @@ void Application::Run()
     graphics_context_->StartNewFrame(width, height);
     debug_layer_->StartNewFrame();
 
+    GFX::Device::UpdateDefaultShaderViewProjectionMatrix(camera_->GetViewProjectionMatrix());
     layer_stack_->RenderLayers();
     layer_stack_->ImGuiRenderLayers();
 
@@ -67,6 +71,10 @@ void Application::Run()
   }
 }
 
-void Application::PushLayer(Layer* layer) { layer_stack_->PushLayer(layer); }
+void Application::PushLayer(Layer* layer)
+{
+  layer->SetCamera(camera_.get());
+  layer_stack_->PushLayer(layer);
+}
 void Application::PushOverlay(Layer* layer) { layer_stack_->PushOverlay(layer); }
 } // namespace Squirrel

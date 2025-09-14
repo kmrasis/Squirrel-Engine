@@ -1,7 +1,8 @@
 #include "log-impl.h"
 #include "shader.h"
 
-#include "glad/glad.h"
+#include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "default_fragment.h"
 #include "default_vertex.h"
@@ -38,8 +39,13 @@ public:
   }
   ~OpenGLShader() { glDeleteProgram(shader_program_); }
 
-  void Bind() const { glUseProgram(shader_program_); }
-  void Unbind() const { glUseProgram(0); }
+  void Bind() const override { glUseProgram(shader_program_); }
+  void Unbind() const override { glUseProgram(0); }
+  void UploadUniform(const std::string& name, const ::glm::mat4& matrix) override
+  {
+    GLint location = glGetUniformLocation(shader_program_, name.c_str());
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+  }
 
 private:
   void checkCompileErrors(GLuint shader, bool is_shader)

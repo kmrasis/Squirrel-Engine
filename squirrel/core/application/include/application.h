@@ -10,6 +10,7 @@ class EventManager;
 class LayerStack;
 class Layer;
 class DebugLayer;
+class OrthoCamera;
 class Application
 {
 public:
@@ -26,6 +27,7 @@ private:
   std::unique_ptr<EventManager> event_manager_;
   std::unique_ptr<LayerStack> layer_stack_;
   std::unique_ptr<GraphicsContext> graphics_context_;
+  std::unique_ptr<OrthoCamera> camera_;
   DebugLayer* debug_layer_;
 };
 

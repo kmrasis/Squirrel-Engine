@@ -96,6 +96,16 @@ Mesh* Device::CreateMesh(Buffer* vtx_buffer, const VertexLayout& vtx_layout, con
   CONSOLE_ERROR("Unknown API type. Failed to create Mesh");
   return nullptr;
 }
+
+void Device::UpdateDefaultShaderViewProjectionMatrix(const ::glm::mat4& matrix)
+{
+  if (default_shader_)
+  {
+    default_shader_->Bind();
+    default_shader_->UploadUniform("viewProjectionMatrix", matrix);
+    default_shader_->Unbind();
+  }
+}
 void Device::CleanUp()
 {
   default_pipeline_.reset();
