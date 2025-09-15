@@ -15,15 +15,29 @@ OrthoCamera::~OrthoCamera() = default;
 
 void OrthoCamera::UpdateMatrices()
 {
-  ::glm::mat4 transform = ::glm::translate(::glm::mat4(1.0f), position_)
-                        * ::glm::rotate(::glm::mat4(1.0f), rotation_, ::glm::vec3(0, 0, 1));
+  ::glm::mat4 transform = ::glm::rotate(::glm::mat4(1.0f), rotation_, ::glm::vec3(0, 0, 1))
+                        * ::glm::translate(::glm::mat4(1.0f), position_);
 
   view_matrix_            = ::glm::inverse(transform);
   view_projection_matrix_ = projection_matrix_ * view_matrix_;
 }
 
-void OrthoCamera::SetPosition(const ::glm::vec3& position) { position_ = position; }
-void OrthoCamera::SetRotation(const float& rotation) { rotation_ = rotation; }
+void OrthoCamera::SetPosition(const ::glm::vec3& position)
+{
+  position_ = position;
+  UpdateMatrices();
+}
+void OrthoCamera::SetRotation(const float& rotation)
+{
+  rotation_ = rotation;
+  UpdateMatrices();
+}
+void OrthoCamera::SetPositionAndRotation(const ::glm::vec3& position, const float& rotation)
+{
+  position_ = position;
+  rotation_ = rotation;
+  UpdateMatrices();
+}
 const ::glm::vec3& OrthoCamera::GetPosition() { return position_; }
 const float& OrthoCamera::GetRotation() { return rotation_; }
 

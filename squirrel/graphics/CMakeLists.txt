@@ -10,4 +10,5 @@ PRIVATE
     opengl_graphics
 )
 
+add_subdirectory(renderer)
 add_subdirectory(impl/opengl)

@@ -40,6 +40,12 @@ void Device::InitDefaults()
   }
 }
 
+void Device::ResetDefaults()
+{
+  default_shader_.reset();
+  default_pipeline_.reset();
+}
+
 Buffer* Device::CreateBuffer(const BufferType& type, const BufferUsage& usage, const void* data, size_t size)
 {
   switch (api_)
@@ -96,19 +102,12 @@ Mesh* Device::CreateMesh(Buffer* vtx_buffer, const VertexLayout& vtx_layout, con
   CONSOLE_ERROR("Unknown API type. Failed to create Mesh");
   return nullptr;
 }
-
-void Device::UpdateDefaultShaderViewProjectionMatrix(const ::glm::mat4& matrix)
+Shader* Device::GetDefaultShader()
 {
   if (default_shader_)
   {
-    default_shader_->Bind();
-    default_shader_->UploadUniform("viewProjectionMatrix", matrix);
-    default_shader_->Unbind();
+    return default_shader_.get();
   }
-}
-void Device::CleanUp()
-{
-  default_pipeline_.reset();
-  default_shader_.reset();
+  return nullptr;
 }
 } // namespace Squirrel::GFX

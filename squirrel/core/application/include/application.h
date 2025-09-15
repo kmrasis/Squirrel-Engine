@@ -4,7 +4,10 @@
 
 namespace Squirrel
 {
-class GraphicsContext;
+namespace GFX
+{
+  class Renderer;
+}
 class WindowManager;
 class EventManager;
 class LayerStack;
@@ -26,7 +29,7 @@ private:
   std::unique_ptr<WindowManager> window_manager_;
   std::unique_ptr<EventManager> event_manager_;
   std::unique_ptr<LayerStack> layer_stack_;
-  std::unique_ptr<GraphicsContext> graphics_context_;
+  std::unique_ptr<GFX::Renderer> renderer_;
   std::unique_ptr<OrthoCamera> camera_;
   DebugLayer* debug_layer_;
 };

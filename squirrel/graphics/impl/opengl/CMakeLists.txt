@@ -13,3 +13,5 @@ target_link_libraries(opengl_graphics PUBLIC
     utils_logger
     dep_glad
 )
+
+add_subdirectory(renderer)

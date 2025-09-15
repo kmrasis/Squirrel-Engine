@@ -7,6 +7,9 @@
 #include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 
+#include "camera.h"
+#include <glm/gtc/type_ptr.hpp>
+
 #include "appEvent.h"
 #include "keyEvent.h"
 #include "mouseEvent.h"
@@ -55,16 +58,16 @@ void Squirrel::DebugLayer::Attach()
 
   float vertices[] = {
       // pos              // color
-      -0.2f, 0.7f,  0.0f, 0.2f, 0.7f, 0.0f, // 0
-      0.2f,  0.7f,  0.0f, 0.6f, 0.7f, 0.0f, // 1
-      -0.1f, 0.6f,  0.0f, 0.3f, 0.6f, 0.0f, // 2
-      0.1f,  0.6f,  0.0f, 0.5f, 0.6f, 0.0f, // 3
-      -0.1f, 0.2f,  0.0f, 0.3f, 0.2f, 0.0f, // 4
-      0.1f,  0.2f,  0.0f, 0.5f, 0.2f, 0.0f, // 5
-      -0.1f, 0.1f,  0.0f, 0.3f, 0.1f, 0.0f, // 6
-      0.2f,  0.1f,  0.0f, 0.5f, 0.1f, 0.0f, // 7
-      -0.2f, -0.7f, 0.0f, 0.2f, 0.7f, 0.0f, // 8
-      -0.1f, -0.7f, 0.0f, 0.3f, 0.7f, 0.0f  // 9
+      -0.32f, 0.63f,  0.0f, 0.2f, 0.7f, 0.0f, // 0
+      0.32f,  0.63f,  0.0f, 0.6f, 0.7f, 0.0f, // 1
+      -0.16f, 0.54f,  0.0f, 0.3f, 0.6f, 0.0f, // 2
+      0.16f,  0.54f,  0.0f, 0.5f, 0.6f, 0.0f, // 3
+      -0.16f, 0.18f,  0.0f, 0.3f, 0.2f, 0.0f, // 4
+      0.16f,  0.18f,  0.0f, 0.5f, 0.2f, 0.0f, // 5
+      -0.16f, 0.09f,  0.0f, 0.3f, 0.1f, 0.0f, // 6
+      0.32f,  0.09f,  0.0f, 0.5f, 0.1f, 0.0f, // 7
+      -0.32f, -0.63f, 0.0f, 0.2f, 0.7f, 0.0f, // 8
+      -0.16f, -0.63f, 0.0f, 0.3f, 0.7f, 0.0f  // 9
   };
   unsigned int indices[] = {
       0, 2, 8, // 0
@@ -119,6 +122,20 @@ void Squirrel::DebugLayer::ImGuiRender()
 {
   LOG_DEBUG("Show demo ImGUI Window");
   ImGui::ShowDemoWindow();
+
+  if (!ImGui::Begin("View Projection Matrix"))
+  {
+    ImGui::End();
+    return;
+  }
+  const glm::mat4& vp_matrix = camera_->GetViewProjectionMatrix();
+
+  // Editable controls
+  ImGui::DragFloat4("Row1", (float*)glm::value_ptr(vp_matrix[0]), 0.1f);
+  ImGui::DragFloat4("Row2", (float*)glm::value_ptr(vp_matrix[1]), 0.1f);
+  ImGui::DragFloat4("Row3", (float*)glm::value_ptr(vp_matrix[2]), 0.1f);
+  ImGui::DragFloat4("Row4", (float*)glm::value_ptr(vp_matrix[3]), 0.1f);
+  ImGui::End();
 }
 void Squirrel::DebugLayer::DrawFrame()
 {

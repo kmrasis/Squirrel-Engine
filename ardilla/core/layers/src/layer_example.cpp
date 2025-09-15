@@ -5,9 +5,8 @@
 #include "graphics.h"
 #include "input_poller.h"
 
+#include "camera.h"
 #include "imgui.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 ExampleLayer::ExampleLayer()
@@ -20,16 +19,21 @@ void ExampleLayer::Update()
 {
   Squirrel::InputPoller& ip = Squirrel::InputPoller::GetInputPoller();
 
-  int up    = ip.IsKeyPressed('W') ? 1 : 0;
-  int down  = ip.IsKeyPressed('S') ? 1 : 0;
-  int left  = ip.IsKeyPressed('A') ? 1 : 0;
-  int right = ip.IsKeyPressed('D') ? 1 : 0;
+#define KEY_UP 265
+#define KEY_DOWN 264
+#define KEY_LEFT 263
+#define KEY_RIGHT 262
+
+  int up    = ip.IsKeyPressed(KEY_UP) ? 1 : 0;
+  int down  = ip.IsKeyPressed(KEY_DOWN) ? 1 : 0;
+  int left  = ip.IsKeyPressed(KEY_LEFT) ? 1 : 0;
+  int right = ip.IsKeyPressed(KEY_RIGHT) ? 1 : 0;
 
   float xdel = del * (right - left);
   float ydel = del * (up - down);
 
   // shift x
-  if (vertices[0] + xdel > -1.0f && vertices[6] + xdel < 1.0f)
+  if (vertices[0] + xdel > -1.6f && vertices[6] + xdel < 1.6f)
   {
     vertices[0] += xdel;
     vertices[6] += xdel;
@@ -38,7 +42,7 @@ void ExampleLayer::Update()
   }
 
   // shift y
-  if (vertices[1] + ydel < 1.0f && vertices[19] + ydel > -1.0f)
+  if (vertices[1] + ydel < 0.9f && vertices[19] + ydel > -0.9f)
   {
     vertices[1] += ydel;
     vertices[7] += ydel;
@@ -54,6 +58,25 @@ void ExampleLayer::Update()
   vtx_layout.AddAttribute(1, 3, 3);
 
   mesh_ = Squirrel::GFX::Device::CreateMesh(vtx_buffer, vtx_layout, 4, idx_buffer, 2);
+
+  // Camera Controls
+  up    = ip.IsKeyPressed('W') ? 1 : 0;
+  down  = ip.IsKeyPressed('S') ? 1 : 0;
+  left  = ip.IsKeyPressed('A') ? 1 : 0;
+  right = ip.IsKeyPressed('D') ? 1 : 0;
+
+  int rotate_plus  = ip.IsKeyPressed('P') ? 1 : 0;
+  int rotate_minus = ip.IsKeyPressed('O') ? 1 : 0;
+
+  xdel = del * (right - left);
+  ydel = del * (up - down);
+
+  float rotate_del = del * (rotate_plus - rotate_minus);
+
+  glm::vec3 camera_pos = camera_->GetPosition();
+  camera_pos.x -= xdel;
+  camera_pos.y -= ydel;
+  camera_->SetPositionAndRotation(camera_pos, camera_->GetRotation() + rotate_del);
 }
 
 void ExampleLayer::Render()

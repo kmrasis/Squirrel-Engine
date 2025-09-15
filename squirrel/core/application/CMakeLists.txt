@@ -7,11 +7,10 @@ target_include_directories(squirrel_application PUBLIC
 target_link_libraries(squirrel_application PUBLIC
     utils_logger
     squirrel_layers
+    squirrel_camera
 PRIVATE
-    squirrel_graphics
+    squirrel_renderer
     squirrel_window_manager
     squirrel_event_manager
-    squirrel_graphics_context
     squirrel_debug_layer
-    squirrel_camera
 )
