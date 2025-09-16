@@ -6,6 +6,7 @@
 namespace Squirrel
 {
 class Event;
+class OrthoCamera;
 class Layer
 {
 public:
@@ -19,7 +20,10 @@ public:
   virtual void HandleEvent(const std::shared_ptr<Event> event);
   inline const std::string& GetName() const { return debug_name_; };
 
+  void SetCamera(OrthoCamera* camera);
+
 protected:
   std::string debug_name_;
+  OrthoCamera* camera_;
 };
 } // namespace Squirrel

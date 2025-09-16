@@ -7,17 +7,22 @@ namespace Squirrel
 class KeyPressEvent;
 class KeyTypeEvent;
 class WindowFocusEvent;
-;
 class MouseButtonEvent;
 class MouseMoveEvent;
 class MouseScrollEvent;
+
+namespace GFX
+{
+  class Mesh;
+  class Pipeline;
+} // namespace GFX
+
 class DebugLayer : public Layer
 {
 public:
   DebugLayer();
   ~DebugLayer();
-  void Init(void* window);
-  void DeInit();
+  void SetWindow(void* window);
   void StartNewFrame();
   void Attach() override;
   void Detach() override;
@@ -37,5 +42,7 @@ public:
 private:
   bool is_initialised_  = false;
   ::GLFWwindow* window_ = nullptr;
+  GFX::Mesh* mesh_;
+  GFX::Pipeline* pipeline_;
 };
 } // namespace Squirrel

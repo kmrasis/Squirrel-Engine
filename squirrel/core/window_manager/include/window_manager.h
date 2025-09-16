@@ -1,42 +1,33 @@
+#include <memory>
 #include <queue>
 
-#include <memory>
-
-struct GLFWwindow;
 namespace Squirrel
 {
 class Event;
-class WindowProperty;
-using EventQueue         = std::queue<std::shared_ptr<Event>>;
-using EventQPropertyPair = std::pair<EventQueue, WindowProperty>;
+using EventQueue = std::queue<std::shared_ptr<Event>>;
 class WindowManager
 {
-public:
+protected:
   WindowManager();
-  ~WindowManager();
 
-  void Init();
+public:
+  virtual ~WindowManager();
+  static WindowManager* CreateManager();
 
-  void DeInit();
+  virtual bool CreateWindow(const char* title, const int width, const int height) = 0;
 
-  bool IsInitialised();
-  bool ShouldWindowClose();
+  virtual void GetWindowSize(int* width, int* height)      = 0;
+  virtual void GetFrameBufferSize(int* width, int* height) = 0;
 
-  bool CreateWindow(WindowProperty& props);
-  void* GetRawWindow() { return window_; }
-  void CloseWindow();
+  virtual bool ShouldWindowClose()    = 0;
+  virtual void SetEventCallbacks()    = 0;
+  virtual EventQueue* GetEventQueue() = 0;
 
-  void SetVSync(const bool& enabled);
-  void SetEventCallbacks();
-  void PollEvents();
-  void StartNewFrame();
-  void SwapBuffers();
-  EventQueue& GetEventQueue();
+  virtual void* GetRawWindow() = 0;
+  virtual void CloseWindow()   = 0;
+  virtual void PollEvents()    = 0;
+  virtual void SwapBuffers()   = 0;
 
-private:
-  bool is_initialised_ = false;
-  ::GLFWwindow* window_;
-  EventQPropertyPair* window_user_pointer_;
+  virtual void SetVSync(const bool& enabled) = 0;
 };
-
 } // namespace Squirrel

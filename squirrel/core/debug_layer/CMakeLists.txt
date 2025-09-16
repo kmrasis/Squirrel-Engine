@@ -9,4 +9,6 @@ target_link_libraries(squirrel_debug_layer PUBLIC
 PRIVATE
     dep_imgui
     squirrel_layers
+    squirrel_graphics
+    squirrel_camera
 )

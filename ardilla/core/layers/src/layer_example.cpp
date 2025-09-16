@@ -2,31 +2,89 @@
 #include "log-impl.h"
 
 #include "event.h"
+#include "graphics.h"
 #include "input_poller.h"
 
+#include "camera.h"
 #include "imgui.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-glm::vec3 position(0.0f, 0.0f, 0.0f);
-glm::vec3 rotation(0.0f, 0.0f, 0.0f);
-glm::vec3 scale(1.0f, 1.0f, 1.0f);
 
 ExampleLayer::ExampleLayer()
     : Layer("Example"){};
 ExampleLayer ::~ExampleLayer() = default;
 
-void ExampleLayer::Attach() {}
+void ExampleLayer::Attach() { pipeline_ = Squirrel::GFX::Device::CreatePipeline(nullptr); }
 void ExampleLayer::Detach() {}
 void ExampleLayer::Update()
 {
   Squirrel::InputPoller& ip = Squirrel::InputPoller::GetInputPoller();
-  LOG_INFO("Is 'A' Key pressed [{}]", ip.IsKeyPressed('A'));
-  LOG_INFO("Mouse at: [{}, {}]", ip.GetCursorX(), ip.GetCursorY());
+
+#define KEY_UP 265
+#define KEY_DOWN 264
+#define KEY_LEFT 263
+#define KEY_RIGHT 262
+
+  int up    = ip.IsKeyPressed(KEY_UP) ? 1 : 0;
+  int down  = ip.IsKeyPressed(KEY_DOWN) ? 1 : 0;
+  int left  = ip.IsKeyPressed(KEY_LEFT) ? 1 : 0;
+  int right = ip.IsKeyPressed(KEY_RIGHT) ? 1 : 0;
+
+  float xdel = del * (right - left);
+  float ydel = del * (up - down);
+
+  // shift x
+  if (vertices[0] + xdel > -1.6f && vertices[6] + xdel < 1.6f)
+  {
+    vertices[0] += xdel;
+    vertices[6] += xdel;
+    vertices[12] += xdel;
+    vertices[18] += xdel;
+  }
+
+  // shift y
+  if (vertices[1] + ydel < 0.9f && vertices[19] + ydel > -0.9f)
+  {
+    vertices[1] += ydel;
+    vertices[7] += ydel;
+    vertices[13] += ydel;
+    vertices[19] += ydel;
+  }
+  auto vtx_buffer = Squirrel::GFX::Device::CreateBuffer(
+      Squirrel::GFX::BufferType::Vertex, Squirrel::GFX::BufferUsage::Static, &vertices, sizeof(vertices));
+  auto idx_buffer = Squirrel::GFX::Device::CreateBuffer(
+      Squirrel::GFX::BufferType::Index, Squirrel::GFX::BufferUsage::Static, &indices, sizeof(indices));
+  Squirrel::GFX::VertexLayout vtx_layout = Squirrel::GFX::VertexLayout(6);
+  vtx_layout.AddAttribute(0, 0, 3);
+  vtx_layout.AddAttribute(1, 3, 3);
+
+  mesh_ = Squirrel::GFX::Device::CreateMesh(vtx_buffer, vtx_layout, 4, idx_buffer, 2);
+
+  // Camera Controls
+  up    = ip.IsKeyPressed('W') ? 1 : 0;
+  down  = ip.IsKeyPressed('S') ? 1 : 0;
+  left  = ip.IsKeyPressed('A') ? 1 : 0;
+  right = ip.IsKeyPressed('D') ? 1 : 0;
+
+  int rotate_plus  = ip.IsKeyPressed('P') ? 1 : 0;
+  int rotate_minus = ip.IsKeyPressed('O') ? 1 : 0;
+
+  xdel = del * (right - left);
+  ydel = del * (up - down);
+
+  float rotate_del = del * (rotate_plus - rotate_minus);
+
+  glm::vec3 camera_pos = camera_->GetPosition();
+  camera_pos.x -= xdel;
+  camera_pos.y -= ydel;
+  camera_->SetPositionAndRotation(camera_pos, camera_->GetRotation() + rotate_del);
 }
 
-void ExampleLayer::Render() {}
+void ExampleLayer::Render()
+{
+  pipeline_->Bind();
+  mesh_->Draw();
+  pipeline_->Unbind();
+}
 
 void ExampleLayer::ImGuiRender()
 {
@@ -35,26 +93,15 @@ void ExampleLayer::ImGuiRender()
     ImGui::End();
     return;
   }
-
+  glm::vec2 position1(vertices[0], vertices[1]);
+  glm::vec2 position2(vertices[6], vertices[7]);
+  glm::vec2 position3(vertices[12], vertices[13]);
+  glm::vec2 position4(vertices[18], vertices[19]);
   // Editable controls
-  ImGui::DragFloat3("Position", glm::value_ptr(position), 0.1f);
-  ImGui::DragFloat3("Rotation", glm::value_ptr(rotation), 0.1f);
-  ImGui::DragFloat3("Scale", glm::value_ptr(scale), 0.1f);
-
-  // Build transform matrix with GLM
-  glm::mat4 model = glm::mat4(1.0f);
-  model           = glm::translate(model, position);
-  model           = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1, 0, 0));
-  model           = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0, 1, 0));
-  model           = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0, 0, 1));
-  model           = glm::scale(model, scale);
-
-  // Show Matrix
-  ImGui::Text("Model Matrix");
-  for (int i = 0; i < 4; ++i)
-  {
-    ImGui::Text("[%.2f %.2f %.2f %.2f]", model[i][0], model[i][1], model[i][2], model[i][3]);
-  }
+  ImGui::DragFloat2("Pos1", glm::value_ptr(position1), 0.1f);
+  ImGui::DragFloat2("Pos2", glm::value_ptr(position2), 0.1f);
+  ImGui::DragFloat2("Pos3", glm::value_ptr(position3), 0.1f);
+  ImGui::DragFloat2("Pos4", glm::value_ptr(position4), 0.1f);
   ImGui::End();
 }
 
