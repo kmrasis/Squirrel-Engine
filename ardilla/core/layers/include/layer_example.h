@@ -12,7 +12,7 @@ public:
   ~ExampleLayer();
   void Attach() override;
   void Detach() override;
-  void Update() override;
+  void Update(const float& delta_time_s) override;
   void Render() override;
   void ImGuiRender() override;
   void HandleEvent(const std::shared_ptr<Squirrel::Event> event) override;
@@ -27,7 +27,7 @@ private:
   };
 
   int indices[6] = {0, 1, 2, 2, 3, 0};
-  float del      = 0.01f;
+  float del      = 1.0f;
   Squirrel::GFX::Mesh* mesh_;
   Squirrel::GFX::Pipeline* pipeline_;
 };

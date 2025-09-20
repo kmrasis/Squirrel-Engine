@@ -70,12 +70,12 @@ void LayerStack::PopOverlay(Layer* overlay)
   overlay = nullptr;
 }
 
-void LayerStack::UpdateLayers()
+void LayerStack::UpdateLayers(const float& delta_time_s)
 {
   LOG_DEBUG("Updating layerstack");
   for (auto it = rbegin(); it != rend(); ++it)
   {
-    (*it)->Update();
+    (*it)->Update(delta_time_s);
   }
 }
 

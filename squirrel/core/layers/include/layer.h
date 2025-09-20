@@ -14,7 +14,7 @@ public:
   virtual ~Layer();
   virtual void Attach();
   virtual void Detach();
-  virtual void Update();
+  virtual void Update(const float& delta_time_s);
   virtual void Render();
   virtual void ImGuiRender();
   virtual void HandleEvent(const std::shared_ptr<Event> event);

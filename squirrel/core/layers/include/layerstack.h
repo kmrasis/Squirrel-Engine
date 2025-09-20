@@ -16,7 +16,7 @@ public:
   void PushOverlay(Layer* overlay);
   void PopLayer(Layer* layer);
   void PopOverlay(Layer* overlay);
-  void UpdateLayers();
+  void UpdateLayers(const float& delta_time_s);
   void RenderLayers();
   void ImGuiRenderLayers();
   std::vector<Layer*>::iterator layerBegin() { return layers_.begin(); }

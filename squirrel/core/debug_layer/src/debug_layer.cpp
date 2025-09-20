@@ -103,7 +103,7 @@ void Squirrel::DebugLayer::Detach()
   is_initialised_ = false;
   CONSOLE_INFO("DeInitialised ImGUI Successfully");
 }
-void Squirrel::DebugLayer::Update() {}
+void Squirrel::DebugLayer::Update(const float& delta_time_s) {}
 void Squirrel::DebugLayer::StartNewFrame()
 {
   ImGui_ImplOpenGL3_NewFrame();

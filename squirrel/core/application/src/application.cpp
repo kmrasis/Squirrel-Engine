@@ -9,6 +9,7 @@
 #include "window_manager.h"
 
 #include "device.h"
+#include <chrono>
 
 namespace Squirrel
 {
@@ -49,11 +50,20 @@ Application::~Application()
 void Application::Run()
 {
   CONSOLE_INFO("Booting up the Squirrel Engine!");
+  using Clock     = std::chrono::steady_clock;
+  using Timepoint = std::chrono::time_point<Clock>;
+
+  Timepoint prev_time = Clock::now();
+  Timepoint curr_time;
+
   while (is_initialised_ && !window_manager_->ShouldWindowClose())
   {
     window_manager_->PollEvents();
     event_manager_->DispatchEvents();
-    layer_stack_->UpdateLayers();
+
+    curr_time = Clock::now();
+    layer_stack_->UpdateLayers(std::chrono::duration<float>(curr_time - prev_time).count());
+    prev_time = curr_time;
 
     int width, height;
     window_manager_->GetWindowSize(&width, &height);

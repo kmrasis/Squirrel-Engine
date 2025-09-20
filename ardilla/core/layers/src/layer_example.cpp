@@ -15,7 +15,7 @@ ExampleLayer ::~ExampleLayer() = default;
 
 void ExampleLayer::Attach() { pipeline_ = Squirrel::GFX::Device::CreatePipeline(nullptr); }
 void ExampleLayer::Detach() {}
-void ExampleLayer::Update()
+void ExampleLayer::Update(const float& delta_time_s)
 {
   Squirrel::InputPoller& ip = Squirrel::InputPoller::GetInputPoller();
 
@@ -29,8 +29,8 @@ void ExampleLayer::Update()
   int left  = ip.IsKeyPressed(KEY_LEFT) ? 1 : 0;
   int right = ip.IsKeyPressed(KEY_RIGHT) ? 1 : 0;
 
-  float xdel = del * (right - left);
-  float ydel = del * (up - down);
+  float xdel = (del * (right - left)) * delta_time_s;
+  float ydel = (del * (up - down)) * delta_time_s;
 
   // shift x
   if (vertices[0] + xdel > -1.6f && vertices[6] + xdel < 1.6f)
@@ -68,10 +68,10 @@ void ExampleLayer::Update()
   int rotate_plus  = ip.IsKeyPressed('P') ? 1 : 0;
   int rotate_minus = ip.IsKeyPressed('O') ? 1 : 0;
 
-  xdel = del * (right - left);
-  ydel = del * (up - down);
+  xdel = (del * (right - left)) * delta_time_s;
+  ydel = (del * (up - down)) * delta_time_s;
 
-  float rotate_del = del * (rotate_plus - rotate_minus);
+  float rotate_del = (del * (rotate_plus - rotate_minus)) * delta_time_s;
 
   glm::vec3 camera_pos = camera_->GetPosition();
   camera_pos.x -= xdel;
@@ -88,6 +88,14 @@ void ExampleLayer::Render()
 
 void ExampleLayer::ImGuiRender()
 {
+  if (!ImGui::Begin("Speed (units/sec)"))
+  {
+    ImGui::End();
+    return;
+  }
+  ImGui::SliderFloat("Del", &del, 0.0f, 5.0f, "%.2f");
+  ImGui::End();
+
   if (!ImGui::Begin("Example Transform Controls"))
   {
     ImGui::End();

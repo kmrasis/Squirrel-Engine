@@ -26,7 +26,7 @@ public:
   void StartNewFrame();
   void Attach() override;
   void Detach() override;
-  void Update() override;
+  void Update(const float& delta_time_s) override;
   void Render() override;
   void ImGuiRender() override;
   void DrawFrame();
