@@ -97,6 +97,7 @@ void Squirrel::DebugLayer::Attach()
 
 void Squirrel::DebugLayer::Detach()
 {
+  delete mesh_;
   ImGui_ImplOpenGL3_Shutdown();
   ImGui_ImplGlfw_Shutdown();
   ImGui::DestroyContext();
@@ -115,6 +116,7 @@ void Squirrel::DebugLayer::StartNewFrame()
 void Squirrel::DebugLayer::Render()
 {
   pipeline_->Bind();
+  pipeline_->GetShader()->UploadUniform("transform", glm::mat4(1.0f));
   mesh_->Draw();
   pipeline_->Unbind();
 }

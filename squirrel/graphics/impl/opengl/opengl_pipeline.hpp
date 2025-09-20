@@ -12,6 +12,7 @@ public:
   ~OpenGLPipeline() {}
   virtual void Bind() const override { shader_->Bind(); }
   virtual void Unbind() const override { shader_->Unbind(); }
+  virtual Shader* GetShader() const override { return shader_; }
 
 private:
   Shader* shader_;
