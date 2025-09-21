@@ -84,9 +84,7 @@ void ExampleLayer::Attach()
       Squirrel::GFX::BufferType::Vertex, Squirrel::GFX::BufferUsage::Static, &vertices, sizeof(vertices));
   auto idx_buffer = Squirrel::GFX::Device::CreateBuffer(
       Squirrel::GFX::BufferType::Index, Squirrel::GFX::BufferUsage::Static, &indices, sizeof(indices));
-  Squirrel::GFX::VertexLayout vtx_layout = Squirrel::GFX::VertexLayout(5);
-  vtx_layout.AddAttribute(0, 0, 3);
-  vtx_layout.AddAttribute(1, 3, 2);
+  Squirrel::GFX::VertexLayout vtx_layout({ Squirrel::GFX::DataType::Float3, Squirrel::GFX::DataType::Float2 });
 
   mesh_ = Squirrel::GFX::Device::CreateMesh(vtx_buffer, vtx_layout, 4, idx_buffer, 2);
 }

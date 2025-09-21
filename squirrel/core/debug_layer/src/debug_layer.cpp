@@ -84,8 +84,7 @@ void Squirrel::DebugLayer::Attach()
   auto vtx_buffer
       = GFX::Device::CreateBuffer(GFX::BufferType::Vertex, GFX::BufferUsage::Static, &vertices, sizeof(vertices));
 
-  GFX::VertexLayout vtx_layout = GFX::VertexLayout(3);
-  vtx_layout.AddAttribute(0, 0, 3);
+  GFX::VertexLayout vtx_layout({ GFX::DataType::Float3 });
 
   auto idx_buffer
       = GFX::Device::CreateBuffer(GFX::BufferType::Index, GFX::BufferUsage::Static, &indices, sizeof(indices));

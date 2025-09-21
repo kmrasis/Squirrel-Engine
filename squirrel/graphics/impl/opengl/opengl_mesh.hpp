@@ -22,11 +22,11 @@ public:
     for (const auto& attr : vtx_layout_.GetAttributes())
     {
       glVertexAttribPointer((GLuint)attr.location,
-                            (GLint)attr.size,
+                            (GLint)attr.count,
                             GL_FLOAT,
                             GL_FALSE,
-                            (GLsizei)(vtx_layout_.stride * sizeof(float)),
-                            (void*)(attr.offset * sizeof(float)));
+                            (GLsizei)vtx_layout_.stridebytes,
+                            (void*)attr.offsetbytes);
       glEnableVertexAttribArray((GLuint)attr.location);
     }
 
