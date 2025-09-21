@@ -1,1 +1,16 @@
-build/**
+# Ignore everything but allow directory traversal
+*
+!*/
+
+# Allow specific directories and all their contents
+!.github/**
+!ardilla/**
+!squirrel/**
+
+# Add specific files in root
+!.clang-format
+!.gitignore
+!build.sh
+!CMakeLists.txt
+!LICENSE
+!README.md
