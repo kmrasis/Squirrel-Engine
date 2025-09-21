@@ -5,7 +5,7 @@
 #include <memory>
 namespace Squirrel::GFX
 {
-
+class Texture2D;
 class Buffer;
 class Shader;
 class Pipeline;
@@ -31,6 +31,7 @@ public:
   static Pipeline* CreatePipeline(const Shader* shader);
   static Mesh* CreateMesh(Buffer* vtx_buffer, const VertexLayout& vtx_layout, const uint32_t& vtx_count,
                           Buffer* idx_buffer, const uint32_t& idx_count);
+  static Texture2D* CreateTexture2D(const char* path);
 
   static Shader* GetDefaultShader();
   static void ResetDefaults();

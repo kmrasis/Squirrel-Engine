@@ -3,6 +3,7 @@ add_library(opengl_graphics STATIC
     opengl_mesh.hpp
     opengl_pipeline.hpp
     opengl_shader.hpp
+    opengl_texture.hpp
 )
 set_target_properties(opengl_graphics PROPERTIES LINKER_LANGUAGE CXX)
 target_include_directories(opengl_graphics PUBLIC
@@ -12,6 +13,7 @@ target_include_directories(opengl_graphics PUBLIC
 target_link_libraries(opengl_graphics PUBLIC
     utils_logger
     dep_glad
+    dep_stb
 )
 
 add_subdirectory(renderer)

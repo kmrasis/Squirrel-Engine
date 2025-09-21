@@ -4,6 +4,7 @@
 #include "opengl_mesh.hpp"
 #include "opengl_pipeline.hpp"
 #include "opengl_shader.hpp"
+#include "opengl_texture.hpp"
 
 namespace Squirrel::GFX
 {
@@ -108,6 +109,17 @@ Shader* Device::GetDefaultShader()
   {
     return default_shader_.get();
   }
+  return nullptr;
+}
+
+Texture2D* Device::CreateTexture2D(const char* path)
+{
+  switch (api_)
+  {
+    case API::OpenGL:
+      return new OpenGL::OpenGLTexture2D(path);
+  }
+  CONSOLE_ERROR("Unknown API type. Failed to create Texture");
   return nullptr;
 }
 } // namespace Squirrel::GFX

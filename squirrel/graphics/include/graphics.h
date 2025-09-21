@@ -3,3 +3,4 @@
 #include "mesh.h"
 #include "pipeline.h"
 #include "shader.h"
+#include "texture.h"

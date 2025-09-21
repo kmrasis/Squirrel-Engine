@@ -23,6 +23,7 @@
     glad      : Source  v0.1.36 --profile="compatibility" --api="gl=4.6"
     imgui     : Source Version 1.92.2b-docking
     glm       : Header-only Version 1.0.1
+    stb       : Header-only (branch=master, commitId=013ac3b)
 
 
 #### Build Method
