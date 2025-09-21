@@ -20,6 +20,7 @@ Squirrel::DebugLayer::DebugLayer()
 {}
 Squirrel::DebugLayer::~DebugLayer() = default;
 
+::glm::vec4 p_color(1.0f, 0.7529f, 0.7960f, 1.0f);
 ImGuiKey ImGui_ImplGlfw_KeyToImGuiKey(int keycode, int scancode);
 void Squirrel::DebugLayer::SetWindow(void* window) { window_ = (GLFWwindow*)window; }
 
@@ -57,36 +58,34 @@ void Squirrel::DebugLayer::Attach()
   }
 
   float vertices[] = {
-      // pos              // color
-      -0.32f, 0.63f,  0.0f, 0.2f, 0.7f, 0.0f, // 0
-      0.32f,  0.63f,  0.0f, 0.6f, 0.7f, 0.0f, // 1
-      -0.16f, 0.54f,  0.0f, 0.3f, 0.6f, 0.0f, // 2
-      0.16f,  0.54f,  0.0f, 0.5f, 0.6f, 0.0f, // 3
-      -0.16f, 0.18f,  0.0f, 0.3f, 0.2f, 0.0f, // 4
-      0.16f,  0.18f,  0.0f, 0.5f, 0.2f, 0.0f, // 5
-      -0.16f, 0.09f,  0.0f, 0.3f, 0.1f, 0.0f, // 6
-      0.32f,  0.09f,  0.0f, 0.5f, 0.1f, 0.0f, // 7
-      -0.32f, -0.63f, 0.0f, 0.2f, 0.7f, 0.0f, // 8
-      -0.16f, -0.63f, 0.0f, 0.3f, 0.7f, 0.0f  // 9
+    -0.32f, 0.63f,  0.0f, // 0
+    0.32f,  0.63f,  0.0f, // 1
+    -0.16f, 0.54f,  0.0f, // 2
+    0.16f,  0.54f,  0.0f, // 3
+    -0.16f, 0.18f,  0.0f, // 4
+    0.16f,  0.18f,  0.0f, // 5
+    -0.16f, 0.09f,  0.0f, // 6
+    0.32f,  0.09f,  0.0f, // 7
+    -0.32f, -0.63f, 0.0f, // 8
+    -0.16f, -0.63f, 0.0f  // 9
   };
   unsigned int indices[] = {
-      0, 2, 8, // 0
-      2, 8, 9, // 1
-      0, 1, 2, // 2
-      1, 2, 3, // 3
-      1, 3, 7, // 4
-      3, 7, 5, // 5
-      7, 5, 6, // 6
-      5, 6, 4  // 7
+    0, 2, 8, // 0
+    2, 8, 9, // 1
+    0, 1, 2, // 2
+    1, 2, 3, // 3
+    1, 3, 7, // 4
+    3, 7, 5, // 5
+    7, 5, 6, // 6
+    5, 6, 4  // 7
   };
   pipeline_ = GFX::Device::CreatePipeline(nullptr);
 
   auto vtx_buffer
       = GFX::Device::CreateBuffer(GFX::BufferType::Vertex, GFX::BufferUsage::Static, &vertices, sizeof(vertices));
 
-  GFX::VertexLayout vtx_layout = GFX::VertexLayout(6);
+  GFX::VertexLayout vtx_layout = GFX::VertexLayout(3);
   vtx_layout.AddAttribute(0, 0, 3);
-  vtx_layout.AddAttribute(1, 3, 3);
 
   auto idx_buffer
       = GFX::Device::CreateBuffer(GFX::BufferType::Index, GFX::BufferUsage::Static, &indices, sizeof(indices));
@@ -116,7 +115,8 @@ void Squirrel::DebugLayer::StartNewFrame()
 void Squirrel::DebugLayer::Render()
 {
   pipeline_->Bind();
-  pipeline_->GetShader()->UploadUniform("transform", glm::mat4(1.0f));
+  pipeline_->GetShader()->UploadUniformMat4("transform", glm::mat4(1.0f));
+  pipeline_->GetShader()->UploadUniformFloat4("color", p_color);
   mesh_->Draw();
   pipeline_->Unbind();
 }
@@ -125,18 +125,12 @@ void Squirrel::DebugLayer::ImGuiRender()
   LOG_DEBUG("Show demo ImGUI Window");
   ImGui::ShowDemoWindow();
 
-  if (!ImGui::Begin("View Projection Matrix"))
+  if (!ImGui::Begin("P Control"))
   {
     ImGui::End();
     return;
   }
-  const glm::mat4& vp_matrix = camera_->GetViewProjectionMatrix();
-
-  // Editable controls
-  ImGui::DragFloat4("Row1", (float*)glm::value_ptr(vp_matrix[0]), 0.1f);
-  ImGui::DragFloat4("Row2", (float*)glm::value_ptr(vp_matrix[1]), 0.1f);
-  ImGui::DragFloat4("Row3", (float*)glm::value_ptr(vp_matrix[2]), 0.1f);
-  ImGui::DragFloat4("Row4", (float*)glm::value_ptr(vp_matrix[3]), 0.1f);
+  ImGui::ColorPicker4("color", ::glm::value_ptr(p_color));
   ImGui::End();
 }
 void Squirrel::DebugLayer::DrawFrame()

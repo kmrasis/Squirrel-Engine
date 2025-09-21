@@ -13,21 +13,34 @@ ExampleLayer::ExampleLayer()
     : Layer("Example"){};
 ExampleLayer ::~ExampleLayer() = default;
 
+glm::vec4 sq_color(0.5f, 0.0f, 0.5f, 1.0f);
 glm::vec3 scale_v(0.2f);
 glm::vec3 pos(0.0f);
 float gap = 0.01f;
+float del = 1.0f;
 
 void ExampleLayer::Attach()
 {
+  float vertices[] = {
+    -0.5f, 0.5f,  0.0f, // 0
+    0.5f,  0.5f,  0.0f, // 1
+    0.5f,  -0.5f, 0.0f, // 2
+    -0.5f, -0.5f, 0.0f  // 3
+  };
+
+  int indices[] = {
+    0, 1, 2, // 0
+    2, 3, 0  // 1
+  };
+
   pipeline_ = Squirrel::GFX::Device::CreatePipeline(nullptr);
 
   auto vtx_buffer = Squirrel::GFX::Device::CreateBuffer(
       Squirrel::GFX::BufferType::Vertex, Squirrel::GFX::BufferUsage::Static, &vertices, sizeof(vertices));
   auto idx_buffer = Squirrel::GFX::Device::CreateBuffer(
       Squirrel::GFX::BufferType::Index, Squirrel::GFX::BufferUsage::Static, &indices, sizeof(indices));
-  Squirrel::GFX::VertexLayout vtx_layout = Squirrel::GFX::VertexLayout(6);
+  Squirrel::GFX::VertexLayout vtx_layout = Squirrel::GFX::VertexLayout(3);
   vtx_layout.AddAttribute(0, 0, 3);
-  vtx_layout.AddAttribute(1, 3, 3);
 
   mesh_ = Squirrel::GFX::Device::CreateMesh(vtx_buffer, vtx_layout, 4, idx_buffer, 2);
 }
@@ -84,7 +97,8 @@ void ExampleLayer::Render()
           = glm::translate(glm::mat4(1.0f),
                            glm::vec3(pos.x + x * (1.0f * scale_v.x + gap), pos.y + y * (1.0f * scale_v.y + gap), pos.z))
           * glm::scale(glm::mat4(1.0f), scale_v);
-      pipeline_->GetShader()->UploadUniform("transform", transform);
+      pipeline_->GetShader()->UploadUniformMat4("transform", transform);
+      pipeline_->GetShader()->UploadUniformFloat4("color", sq_color);
       mesh_->Draw();
     }
   }
@@ -93,29 +107,17 @@ void ExampleLayer::Render()
 
 void ExampleLayer::ImGuiRender()
 {
-  if (!ImGui::Begin("Variables"))
+  if (!ImGui::Begin("Square controls"))
   {
     ImGui::End();
     return;
   }
   ImGui::DragFloat("Speed", &del, 0.1f, 0.0f, 5.0f, "%.2f");
   ImGui::DragFloat("Gap", &gap, 0.1f, 0.0f, 1.0f, "%.2f");
-  ImGui::End();
+  ImGui::DragFloat2("Scale", glm::value_ptr(scale_v), 0.1f, 0.0f, 2.0f, "%.2f");
+  ImGui::DragFloat2("Pos", glm::value_ptr(pos), 0.1f, -1.0f, 1.0f, "%.2f");
+  ImGui::ColorPicker4("color", glm::value_ptr(sq_color));
 
-  if (!ImGui::Begin("Scale_V"))
-  {
-    ImGui::End();
-    return;
-  }
-  ImGui::DragFloat2("", glm::value_ptr(scale_v), 0.1f, 0.0f, 2.0f, "%.2f");
-  ImGui::End();
-
-  if (!ImGui::Begin("Pos_V"))
-  {
-    ImGui::End();
-    return;
-  }
-  ImGui::DragFloat2("", glm::value_ptr(pos), 0.1f, -1.0f, 1.0f, "%.2f");
   ImGui::End();
 }
 

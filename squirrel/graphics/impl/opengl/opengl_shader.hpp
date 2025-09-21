@@ -41,7 +41,43 @@ public:
 
   void Bind() const override { glUseProgram(shader_program_); }
   void Unbind() const override { glUseProgram(0); }
-  void UploadUniform(const std::string& name, const ::glm::mat4& matrix) override
+
+  void UploadUniformInt(const std::string& name, const int& i) override
+  {
+    GLint location = glGetUniformLocation(shader_program_, name.c_str());
+    glUniform1i(location, i);
+  }
+  void UploadUniformFloat(const std::string& name, const float& f) override
+  {
+    GLint location = glGetUniformLocation(shader_program_, name.c_str());
+    glUniform1f(location, f);
+  }
+  void UploadUniformFloat2(const std::string& name, const ::glm::vec2& vec) override
+  {
+    GLint location = glGetUniformLocation(shader_program_, name.c_str());
+    glUniform2fv(location, 1, ::glm::value_ptr(vec));
+  }
+  void UploadUniformFloat3(const std::string& name, const ::glm::vec3& vec) override
+  {
+    GLint location = glGetUniformLocation(shader_program_, name.c_str());
+    glUniform3fv(location, 1, ::glm::value_ptr(vec));
+  }
+  void UploadUniformFloat4(const std::string& name, const ::glm::vec4& vec) override
+  {
+    GLint location = glGetUniformLocation(shader_program_, name.c_str());
+    glUniform4fv(location, 1, ::glm::value_ptr(vec));
+  }
+  void UploadUniformMat2(const std::string& name, const ::glm::mat2& matrix) override
+  {
+    GLint location = glGetUniformLocation(shader_program_, name.c_str());
+    glUniformMatrix2fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+  }
+  void UploadUniformMat3(const std::string& name, const ::glm::mat3& matrix) override
+  {
+    GLint location = glGetUniformLocation(shader_program_, name.c_str());
+    glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+  }
+  void UploadUniformMat4(const std::string& name, const ::glm::mat4& matrix) override
   {
     GLint location = glGetUniformLocation(shader_program_, name.c_str());
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));

@@ -34,7 +34,7 @@ void Renderer::UpdateDefaultShaderViewProjectionMatrix(const ::glm::mat4& matrix
   if (default_shader)
   {
     default_shader->Bind();
-    default_shader->UploadUniform("viewProjectionMatrix", matrix);
+    default_shader->UploadUniformMat4("viewProjectionMatrix", matrix);
     default_shader->Unbind();
   }
 }
