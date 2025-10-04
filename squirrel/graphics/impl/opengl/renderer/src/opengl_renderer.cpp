@@ -5,7 +5,12 @@
 
 namespace Squirrel::GFX
 {
-OpenGLRenderer::OpenGLRenderer() { CONSOLE_INFO("Using OpenGLRenderer"); }
+OpenGLRenderer::OpenGLRenderer()
+{
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  CONSOLE_INFO("Using OpenGLRenderer");
+}
 OpenGLRenderer::~OpenGLRenderer() = default;
 
 void OpenGLRenderer::StartNewFrame(const int& width, const int& height)
